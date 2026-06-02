@@ -11,8 +11,10 @@
 <link rel="stylesheet" href="assets/site.css" />
 <style>
   .founder{display:flex;gap:1.8rem;align-items:center;max-width:var(--prose);margin-bottom:3rem;padding-bottom:2.5rem;border-bottom:1px solid var(--line)}
-  .founder .photo{flex-shrink:0;width:108px;height:108px;border-radius:50%;background:linear-gradient(160deg,#161619,#0c0c0e);border:1px solid var(--gold-line);display:grid;place-items:center;overflow:hidden}
-  .founder .photo img{width:100%;height:100%;object-fit:cover}
+  .founder .photo{flex-shrink:0;width:160px;height:200px;border-radius:8px;background:linear-gradient(160deg,#161619,#0c0c0e);border:1px solid var(--gold-line);display:grid;place-items:center;overflow:hidden;position:relative}
+  .founder .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;z-index:1}
+  .founder .photo .mono{font-family:var(--serif);font-size:2.1rem;color:var(--gold)}
+  .story-photo{width:100%;border-radius:8px;border:1px solid var(--line);margin:1.4rem 0 1.6rem;display:block;filter:grayscale(1) contrast(1.04)}
   .founder .nm{font-family:var(--serif);font-size:1.6rem;color:var(--warm-white)}
   .founder .role{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:.2rem 0 .7rem}
   .founder .who p{font-size:13.5px;color:var(--chrome);line-height:1.7;margin:0;max-width:440px}
@@ -44,9 +46,12 @@
 
 <main class="section-pad">
   <div class="wrap">
-    <!-- Founder card -->
+    <!-- Founder lead — primary founder image (assets/founder.jpg). Monogram shows until the photo file is added. -->
     <div class="founder reveal">
-      <div class="photo">JK</div>
+      <div class="photo">
+        <img src="assets/founder.jpg" alt="Justin Kittle, Founder of Preset &amp; Profit" onerror="this.remove()" />
+        <span class="mono">JK</span>
+      </div>
       <div class="who">
         <div class="nm">Justin Kittle</div>
         <div class="role">Founder, Preset &amp; Profit</div>
@@ -82,6 +87,12 @@
         <span class="t">Where we honestly are</span>
         <p>Preset &amp; Profit is early, and I'd rather tell you that than dress it up. You won't find invented testimonials, borrowed client logos, or fake "years in business" on this site — because none of that would be true. What you'll find instead is the full method, a real sample audit you can scrutinize, and a free first audit you can judge for yourself. Trust should be earned on evidence, so I'm putting the evidence in front of you and letting it speak.</p>
       </div>
+
+      <h2>Built From a Small Room, Not a Big Team</h2>
+      <img class="story-photo" src="assets/founder-desk.jpg" alt="Justin Kittle building Preset &amp; Profit" onerror="this.style.display='none'" />
+      <p>There is no engineering department behind Preset &amp; Profit. There's me, a laptop, and a stack of modern tools — AI systems like Claude and ChatGPT, GitHub, and automation — doing work that used to require a whole team and a much bigger budget.</p>
+      <p>I'm telling you this on purpose. The same shift that lets one focused operator build and run a real intelligence platform is exactly the leverage Preset &amp; Profit helps you find in your own business: growth that comes from better systems, not more headcount. I'm not hiding behind a fake "team of experts" page, because the honest version is more useful to you — and, frankly, more impressive.</p>
+      <p>This isn't a side project. It's a disciplined method, a real engine, and one accountable person who answers your email. Built lean, on purpose.</p>
 
       <p style="margin-top:2rem;font-style:italic;color:var(--cream);font-family:var(--serif);font-size:1.25rem">— Justin Kittle, Founder</p>
       <p class="muted">Questions, or want to reach me directly? <a class="link" href="contact.html">Here's how.</a></p>
