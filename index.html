@@ -1,861 +1,633 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import * as THREE from "three";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Preset &amp; Profit — AI Business Intelligence Audit</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<meta name="description" content="Preset & Profit runs a forensic AI audit of your website, offer, funnel, and operations — then hands you a prioritized plan to fix what's quietly costing you the most." />
+<meta property="og:title" content="Preset & Profit — AI Business Intelligence Audit" />
+<meta property="og:description" content="Find the revenue your business is quietly losing. A forensic AI audit of your website, offer, funnel, and operations — with a board-ready action plan." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ─────────────────────────────  DESIGN SYSTEM  ───────────────────────────── */
+  :root{
+    --black:#08080a; --charcoal:#0c0c0e; --graphite:#141417; --graphite2:#1c1c20;
+    --line:#222226; --line2:#2c2c31;
+    --chrome:#6b6b73; --silver:#9a9aa3; --mute:#4a4a52;
+    --warm-white:#ECEAE3; --cream:#D8CDBA;
+    --gold:#C4A882; --gold-soft:rgba(196,168,130,.10); --gold-line:rgba(196,168,130,.28);
+    --blue:#5B8DEF; --green:#5FBF8F; --amber:#E0A04E; --red:#D9614F;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Sora',system-ui,-apple-system,sans-serif;
+    --maxw:1200px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--black);color:var(--warm-white);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--gold);color:#000}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#2a2a2e}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
 
-// ─── STYLE INJECTION ──────────────────────────────────────────────────────────
-const GlobalStyle = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Sora:wght@200;300;400;500&display=swap');
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+  .eyebrow{font-size:10px;letter-spacing:4px;color:var(--chrome);text-transform:uppercase;font-weight:400}
+  .serif{font-family:var(--serif)}
+  em.cream{color:var(--cream);font-style:italic;font-weight:300}
+  h1,h2,h3{font-weight:300;letter-spacing:-.01em}
+  .h2{font-family:var(--serif);font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.12;color:var(--warm-white)}
+  .lead{font-size:clamp(14px,1.6vw,16px);line-height:1.85;color:var(--chrome)}
+  section{position:relative}
+  .section-pad{padding:clamp(5rem,10vw,9rem) 0}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Reveal on scroll */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}.d6{transition-delay:.48s}
 
-    :root {
-      --black: #000000;
-      --charcoal: #0c0c0c;
-      --graphite: #161616;
-      --graphite2: #1f1f1f;
-      --chrome: #666666;
-      --silver: #9a9a9a;
-      --warm-white: #ede8e0;
-      --cream: #d4c9b8;
-      --accent: #c4a882;
-      --serif: 'Cormorant Garamond', Georgia, serif;
-      --sans: 'Sora', system-ui, sans-serif;
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--sans);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border:1px solid transparent}
+  .btn-primary{background:var(--gold);color:#0a0a0a;padding:1rem 2.2rem;font-weight:500}
+  .btn-primary:hover{background:#d4bb96;transform:translateY(-2px);box-shadow:0 12px 40px -12px rgba(196,168,130,.5)}
+  .btn-ghost{background:rgba(196,168,130,.04);border-color:var(--gold-line);color:var(--cream);padding:1rem 2.2rem}
+  .btn-ghost:hover{background:var(--gold-soft);border-color:var(--gold);transform:translateY(-2px)}
+  .btn svg{transition:transform .35s}
+  .btn:hover svg{transform:translateX(4px)}
+
+  /* Nav */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.15rem clamp(1.25rem,4vw,3rem);transition:all .5s cubic-bezier(.16,1,.3,1)}
+  nav.scrolled{background:rgba(8,8,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .brand{font-family:var(--serif);font-size:1.2rem;letter-spacing:.3px;color:var(--warm-white);font-weight:500}
+  .brand b{color:var(--gold);font-weight:500}
+  .nav-links{display:flex;gap:2rem;align-items:center}
+  .nav-links a{font-size:11px;letter-spacing:1.5px;color:var(--chrome);text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover{color:var(--warm-white)}
+  .nav-cta{border:1px solid var(--line2);padding:.55rem 1.3rem;color:var(--cream);font-size:10px;letter-spacing:2px;text-transform:uppercase;transition:all .3s}
+  .nav-cta:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-toggle{display:none;background:none;border:none;color:var(--warm-white);cursor:pointer;font-size:1.3rem}
+
+  /* Hero */
+  #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;padding:7rem 1.5rem 4rem}
+  #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+  .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(196,168,130,.06),transparent 70%);pointer-events:none}
+  .hero-content{position:relative;z-index:2;max-width:880px}
+  #hero h1{font-family:var(--serif);font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.04;letter-spacing:-.02em;margin:1.6rem 0}
+  .hero-sub{font-size:clamp(14px,1.8vw,17px);color:var(--silver);max-width:560px;margin:0 auto;line-height:1.8;font-weight:300}
+  .hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.6rem}
+  .hero-trust{margin-top:2.2rem;font-size:12px;color:var(--mute);letter-spacing:.4px;display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap}
+  .hero-trust span{display:inline-flex;align-items:center;gap:.45rem}
+  .dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+
+  /* Logo / trust strip */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#0a0a0c}
+  .strip .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(1.5rem,5vw,4rem);padding:1.6rem 2rem;flex-wrap:wrap}
+  .strip span{font-size:11px;letter-spacing:2px;color:var(--mute);text-transform:uppercase}
+
+  /* Generic grid cards */
+  .grid{display:grid;gap:1.25rem}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:linear-gradient(160deg,#0f0f12,#0b0b0d);border:1px solid var(--line);padding:1.9rem;transition:border-color .4s,transform .4s cubic-bezier(.16,1,.3,1)}
+  .card:hover{border-color:var(--line2);transform:translateY(-4px)}
+  .card .k{font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:1rem}
+  .card h3{font-family:var(--serif);font-size:1.45rem;color:var(--warm-white);margin-bottom:.6rem;line-height:1.2}
+  .card p{font-size:13.5px;color:var(--chrome);line-height:1.75}
+
+  .section-head{max-width:680px;margin-bottom:3.2rem}
+  .section-head .eyebrow{display:block;margin-bottom:1.1rem}
+  .section-head p{margin-top:1.2rem}
+
+  /* Problem leak list */
+  .leak{display:flex;gap:1rem;align-items:flex-start;padding:1.3rem 0;border-bottom:1px solid var(--line)}
+  .leak svg{flex-shrink:0;margin-top:3px}
+  .leak h4{font-size:15px;font-weight:400;color:var(--warm-white);margin-bottom:.25rem}
+  .leak p{font-size:13px;color:var(--chrome);line-height:1.6}
+
+  /* Process steps */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;counter-reset:step}
+  .step{position:relative;padding-top:2.2rem}
+  .step::before{counter-increment:step;content:"0" counter(step);font-family:var(--serif);font-size:1rem;color:var(--gold);position:absolute;top:0;left:0;letter-spacing:2px}
+  .step .bar{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:1.2rem}
+  .step h3{font-family:var(--serif);font-size:1.5rem;color:var(--warm-white);margin-bottom:.6rem}
+  .step p{font-size:13px;color:var(--chrome);line-height:1.7}
+
+  /* Report mockup */
+  .report{background:linear-gradient(165deg,#101013,#0a0a0c);border:1px solid var(--line2);border-radius:6px;overflow:hidden;box-shadow:0 40px 120px -40px rgba(0,0,0,.8)}
+  .report-bar{display:flex;align-items:center;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid var(--line);background:#0c0c0e}
+  .report-bar .tl{width:9px;height:9px;border-radius:50%;background:#26262b}
+  .report-bar .title{margin-left:.8rem;font-size:11px;letter-spacing:2px;color:var(--chrome);text-transform:uppercase}
+  .report-bar .live{margin-left:auto;font-size:10px;letter-spacing:1.5px;color:var(--green);display:flex;align-items:center;gap:.4rem}
+  .report-bar .live i{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .report-body{padding:1.6rem}
+  .scores{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+  .score{text-align:center;padding:1.1rem .6rem;background:#0d0d10;border:1px solid var(--line);border-radius:4px}
+  .gauge{--v:0;--c:var(--gold);width:64px;height:64px;border-radius:50%;margin:0 auto .7rem;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--v)*1%),#1a1a1e 0);position:relative}
+  .gauge::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#0d0d10}
+  .gauge b{position:relative;font-family:var(--serif);font-size:1.2rem;color:var(--warm-white);font-weight:500}
+  .score .lbl{font-size:9.5px;letter-spacing:1.2px;color:var(--chrome);text-transform:uppercase;line-height:1.4}
+  .report-summary{background:#0d0d10;border:1px solid var(--line);border-radius:4px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
+  .report-summary .tag{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+  .report-summary p{font-size:13px;color:var(--silver);line-height:1.7;margin-top:.5rem}
+  .fix{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .fix:last-child{border-bottom:none}
+  .fix .pri{font-size:9px;letter-spacing:1px;padding:.2rem .5rem;border-radius:3px;text-transform:uppercase;flex-shrink:0;font-weight:500}
+  .pri.hi{background:rgba(217,97,79,.14);color:var(--red)}
+  .pri.md{background:rgba(224,160,78,.14);color:var(--amber)}
+  .pri.lo{background:rgba(95,191,143,.14);color:var(--green)}
+  .fix .txt{color:var(--silver);flex:1}
+  .fix .impact{color:var(--chrome);font-size:11px;white-space:nowrap}
+
+  /* Pricing */
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;align-items:start}
+  .tier{background:linear-gradient(165deg,#0f0f12,#0a0a0c);border:1px solid var(--line);padding:2rem 1.8rem;display:flex;flex-direction:column}
+  .tier.featured{border-color:var(--gold-line);background:linear-gradient(165deg,#13110d,#0b0a08)}
+  .tier .badge{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem;min-height:14px}
+  .tier h3{font-family:var(--serif);font-size:1.9rem;color:var(--warm-white);margin-bottom:.3rem}
+  .tier .who{font-size:12px;color:var(--chrome);margin-bottom:1.5rem;line-height:1.5}
+  .depth{padding:1rem 0;border-top:1px solid var(--line)}
+  .depth .row{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+  .depth .name{font-size:13px;color:var(--warm-white);font-weight:400}
+  .depth .price{font-family:var(--serif);font-size:1.25rem;color:var(--gold);white-space:nowrap}
+  .depth .price small{font-size:10px;color:var(--chrome);font-family:var(--sans)}
+  .depth .desc{font-size:11.5px;color:var(--chrome);margin-top:.35rem;line-height:1.5}
+  .tier .btn{justify-content:center;margin-top:1.6rem;width:100%}
+
+  /* Trust */
+  .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+  .trust-item{padding:1.6rem;border:1px solid var(--line);background:#0b0b0d}
+  .trust-item .ic{width:34px;height:34px;border:1px solid var(--gold-line);border-radius:50%;display:grid;place-items:center;margin-bottom:1rem}
+  .trust-item h4{font-size:14px;font-weight:400;color:var(--warm-white);margin-bottom:.5rem}
+  .trust-item p{font-size:12.5px;color:var(--chrome);line-height:1.7}
+
+  /* Use cases */
+  .uc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+  .uc-card{padding:1.7rem;border:1px solid var(--line);background:linear-gradient(160deg,#0e0e11,#0a0a0c);transition:border-color .4s,transform .4s}
+  .uc-card:hover{border-color:var(--gold-line);transform:translateY(-4px)}
+  .uc-card .k{font-family:var(--serif);font-size:1.35rem;color:var(--warm-white);margin-bottom:.6rem}
+  .uc-card p{font-size:13px;color:var(--chrome);line-height:1.7}
+
+  /* Audit form */
+  #audit{background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(196,168,130,.05),transparent 70%),#070709}
+  .audit-box{max-width:620px;margin:0 auto;text-align:center}
+  .audit-form{display:flex;flex-direction:column;gap:.8rem;margin-top:2rem;text-align:left}
+  .audit-form .field{display:flex;flex-direction:column;gap:.4rem}
+  .audit-form label{font-size:10px;letter-spacing:1.5px;color:var(--chrome);text-transform:uppercase}
+  .audit-form input{background:#0d0d10;border:1px solid var(--line2);color:var(--warm-white);font-family:var(--sans);font-size:14px;padding:.95rem 1rem;border-radius:3px;transition:border-color .3s}
+  .audit-form input:focus{outline:none;border-color:var(--gold)}
+  .audit-form input::placeholder{color:var(--mute)}
+  .audit-form button{justify-content:center;margin-top:.4rem}
+  .form-note{font-size:11.5px;color:var(--mute);margin-top:1rem;line-height:1.6}
+  .form-success{display:none;padding:1.6rem;border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:4px;margin-top:1.5rem}
+  .form-success.show{display:block}
+  .form-success h4{font-family:var(--serif);font-size:1.4rem;color:var(--cream);margin-bottom:.5rem}
+  .form-success p{font-size:13px;color:var(--silver);line-height:1.7}
+
+  /* Final CTA */
+  #final{text-align:center;overflow:hidden}
+  #final h2{font-family:var(--serif);font-size:clamp(2.4rem,6vw,5rem);line-height:1.06;letter-spacing:-.02em;max-width:760px;margin:1.5rem auto}
+  #final .lead{max-width:460px;margin:0 auto}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);padding:3rem 0 2.5rem;background:#060608}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
+  .foot .brand{font-size:1.05rem;opacity:.6}
+  .foot-links{display:flex;gap:1.6rem;flex-wrap:wrap}
+  .foot-links a{font-size:11px;letter-spacing:1.5px;color:var(--mute);text-transform:uppercase;transition:color .3s}
+  .foot-links a:hover{color:var(--silver)}
+  .foot-legal{font-size:10px;letter-spacing:1.5px;color:#2c2c31;text-transform:uppercase}
+
+  /* Responsive */
+  @media(max-width:900px){
+    .g4,.scores,.steps{grid-template-columns:repeat(2,1fr)}
+    .g3,.tiers,.trust-grid,.uc{grid-template-columns:1fr}
+    .split{grid-template-columns:1fr!important}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:100%;right:1rem;flex-direction:column;background:rgba(10,10,12,.97);backdrop-filter:blur(14px);border:1px solid var(--line);padding:1.4rem 1.8rem;gap:1.2rem;align-items:flex-start}
+    .nav-toggle{display:block}
+  }
+  @media(max-width:560px){
+    .g2{grid-template-columns:1fr}
+    .scores{grid-template-columns:repeat(2,1fr)}
+    .steps{grid-template-columns:1fr}
+    .hero-ctas .btn{width:100%;justify-content:center}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    *{animation:none!important}
+  }
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+</style>
+</head>
+<body>
+
+<!-- ───────────────── NAV ───────────────── -->
+<nav id="nav">
+  <a href="#hero" class="brand">Preset <b>&amp;</b> Profit</a>
+  <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('navlinks').classList.toggle('open')">☰</button>
+  <div class="nav-links" id="navlinks">
+    <a href="methodology.html">Methodology</a>
+    <a href="sample-report.html">Sample Report</a>
+    <a href="#pricing">Pricing</a>
+    <a href="about.html">About</a>
+    <a href="https://app.presetprofit.com/login">Log in</a>
+    <a href="https://app.presetprofit.com/audit" class="nav-cta">Run My Audit</a>
+  </div>
+</nav>
+
+<!-- ───────────────── HERO ───────────────── -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="eyebrow">AI Business Intelligence · Audit Engine</div>
+    <h1>Your business is leaking<br>revenue. <em class="cream">We show you<br>exactly where.</em></h1>
+    <p class="hero-sub">Preset &amp; Profit runs a forensic AI audit of your website, offer, funnel, and operations — then hands you a prioritized plan to fix what's quietly costing you the most.</p>
+    <div class="hero-ctas">
+      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg>
+      </a>
+      <a href="sample-report.html" class="btn btn-ghost">View a Sample Report</a>
+    </div>
+    <div class="hero-trust">
+      <span><i class="dot"></i> No sales call required</span>
+      <span><i class="dot"></i> First audit is free</span>
+      <span><i class="dot"></i> Results in minutes, not weeks</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── TRUST STRIP ───────────────── -->
+<div class="strip">
+  <div class="wrap">
+    <span>Built for Founders</span>
+    <span>Consultants</span>
+    <span>Agencies</span>
+    <span>Operators</span>
+    <span>SaaS Teams</span>
+  </div>
+</div>
+
+<!-- ───────────────── PROBLEM ───────────────── -->
+<section id="problem" class="section-pad">
+  <div class="wrap">
+    <div class="split">
+      <div class="section-head reveal" style="margin-bottom:0">
+        <span class="eyebrow">The Expensive Blind Spot</span>
+        <h2 class="h2">Most businesses can't see<br><em class="cream">what's costing them the most.</em></h2>
+        <p class="lead">Revenue rarely disappears in one obvious place. It drains slowly — through the gaps between your website, your offer, your follow-up, and your operations. You feel the symptom (flat months, rising ad costs, "we're busy but not profitable") long before you can name the cause. The audit names the cause.</p>
+      </div>
+      <div class="reveal d2">
+        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Broken funnels</h4><p>Visitors arrive, get confused, and leave — and you never see the handoff that lost them.</p></div></div>
+        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Weak positioning &amp; unclear offers</h4><p>If a prospect can't tell what you do and why it's worth the price in 5 seconds, the rest doesn't matter.</p></div></div>
+        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Poor website conversion</h4><p>You're paying for traffic that bounces against friction you've stopped noticing.</p></div></div>
+        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Slow follow-up &amp; missed automation</h4><p>Leads go cold in hours while manual processes quietly cap how much you can grow.</p></div></div>
+        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Bad customer journeys &amp; hidden operational leaks</h4><p>The work gets done, but the path is leaking time, margin, and goodwill at every seam.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── HOW IT WORKS ───────────────── -->
+<section id="how" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      <span class="eyebrow">How It Works</span>
+      <h2 class="h2">From blind spots to a<br><em class="cream">board-ready action plan.</em></h2>
+      <p class="lead">Four steps. No spreadsheets, no guesswork, no week-long consulting engagement to get a first answer.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal d1"><div class="bar"></div><h3>Scan</h3><p>We analyze your public business presence — website, offer, copy, funnel structure, page speed, and the signals your customers actually see.</p></div>
+      <div class="step reveal d2"><div class="bar"></div><h3>Analyze</h3><p>The engine evaluates UX, conversion, positioning, automation, and operations against patterns drawn from how high-performing businesses are built.</p></div>
+      <div class="step reveal d3"><div class="bar"></div><h3>Score &amp; Prioritize</h3><p>Findings are scored by severity and ranked by estimated revenue impact — so you see what's costing you the most, first.</p></div>
+      <div class="step reveal d4"><div class="bar"></div><h3>Act</h3><p>You get a prioritized plan with clear next steps and an executive summary — ready to act on yourself or hand to your team.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── FEATURES ───────────────── -->
+<section id="features" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">What The Audit Finds</span>
+      <h2 class="h2">Eight layers of analysis,<br><em class="cream">one prioritized report.</em></h2>
+      <p class="lead">Each module examines a different way businesses lose money — then consolidates everything into a single, ranked action plan.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card reveal d1"><div class="k">01</div><h3>AI Business Audit</h3><p>A complete diagnostic of how your business presents, sells, and operates — the foundation every other module builds on.</p></div>
+      <div class="card reveal d2"><div class="k">02</div><h3>Website &amp; Funnel Analysis</h3><p>Where attention is lost: structure, clarity, speed, and the path from first click to conversion.</p></div>
+      <div class="card reveal d3"><div class="k">03</div><h3>Offer &amp; Positioning Review</h3><p>Whether your offer is clear, differentiated, and priced to reflect the value you actually deliver.</p></div>
+      <div class="card reveal d4"><div class="k">04</div><h3>Automation Opportunity Mapping</h3><p>The manual work quietly capping your growth — and exactly where automation pays for itself first.</p></div>
+      <div class="card reveal d1"><div class="k">05</div><h3>Conversion Leak Detection</h3><p>The specific points of friction turning interested visitors into bounces, ranked by what they cost you.</p></div>
+      <div class="card reveal d2"><div class="k">06</div><h3>Customer Journey Breakdown</h3><p>The full path — discover, decide, buy, return — with the seams where trust and revenue leak out.</p></div>
+      <div class="card reveal d3"><div class="k">07</div><h3>Strategic Growth Roadmap</h3><p>A sequenced plan of what to fix and in what order, so effort compounds instead of scattering.</p></div>
+      <div class="card reveal d4"><div class="k">08</div><h3>Executive Summary Report</h3><p>The whole picture on one page — built to share with partners, your team, or your board.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── SAMPLE REPORT ───────────────── -->
+<section id="report" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow" style="display:block;margin-bottom:1.1rem">Sample Report Preview</span>
+        <h2 class="h2">See exactly what<br><em class="cream">you'll receive.</em></h2>
+        <p class="lead" style="margin-top:1.2rem">Every audit returns a scored, prioritized report — not a wall of generic advice. The example shown is illustrative; your numbers reflect your business.</p>
+        <ul style="list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:.9rem">
+          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Executive summary written in plain language</li>
+          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Risk, revenue-leak, automation &amp; conversion scores</li>
+          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Priority fixes ranked by estimated impact</li>
+          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Clear, recommended next actions</li>
+        </ul>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
+          <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
+            <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
+          <a href="sample-report.html" class="btn btn-ghost">Open the full sample report</a>
+        </div>
+      </div>
+
+      <div class="report reveal d2">
+        <div class="report-bar">
+          <span class="tl"></span><span class="tl"></span><span class="tl"></span>
+          <span class="title">Audit · acme-co.com</span>
+          <span class="live"><i></i> Analysis complete</span>
+        </div>
+        <div class="report-body">
+          <div class="scores">
+            <div class="score"><div class="gauge" style="--v:72;--c:var(--red)"><b>72</b></div><div class="lbl">Risk<br>Score</div></div>
+            <div class="score"><div class="gauge" style="--v:64;--c:var(--amber)"><b>64</b></div><div class="lbl">Revenue<br>Leak</div></div>
+            <div class="score"><div class="gauge" style="--v:38;--c:var(--blue)"><b>38</b></div><div class="lbl">Automation<br>Score</div></div>
+            <div class="score"><div class="gauge" style="--v:54;--c:var(--gold)"><b>54</b></div><div class="lbl">Conversion<br>Score</div></div>
+          </div>
+          <div class="report-summary">
+            <span class="tag">Executive Summary</span>
+            <p>The business has strong demand but loses most of it before purchase. The offer is unclear above the fold, follow-up is manual and slow, and three high-traffic pages leak conversions. Fixing the top two issues is estimated to recover the majority of lost pipeline within one quarter.</p>
+          </div>
+          <div style="font-size:9px;letter-spacing:2px;color:var(--chrome);text-transform:uppercase;margin-bottom:.4rem">Priority Fixes · Ranked by Impact</div>
+          <div class="fix"><span class="pri hi">High</span><span class="txt">Unclear offer above the fold on homepage</span><span class="impact">Est. high impact</span></div>
+          <div class="fix"><span class="pri hi">High</span><span class="txt">No automated lead follow-up within first hour</span><span class="impact">Est. high impact</span></div>
+          <div class="fix"><span class="pri md">Med</span><span class="txt">Pricing page friction &amp; missing trust signals</span><span class="impact">Est. med impact</span></div>
+          <div class="fix"><span class="pri md">Med</span><span class="txt">Slow mobile load on top landing page</span><span class="impact">Est. med impact</span></div>
+          <div class="fix"><span class="pri lo">Low</span><span class="txt">Inconsistent post-purchase journey</span><span class="impact">Est. low impact</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── PRICING ───────────────── -->
+<section id="pricing" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      <span class="eyebrow">Pricing &amp; Audit Depth</span>
+      <h2 class="h2">Priced to the size<br><em class="cream">of the problem.</em></h2>
+      <p class="lead">Start free. Go deeper when the stakes justify it. Every tier offers three levels of audit depth.</p>
+    </div>
+    <div class="tiers">
+      <!-- Individual -->
+      <div class="tier reveal d1">
+        <div class="badge">&nbsp;</div>
+        <h3>Individual</h3>
+        <p class="who">For solo founders &amp; operators who want clarity on what to fix next.</p>
+        <div class="depth"><div class="row"><span class="name">Free Snapshot</span><span class="price">$0</span></div><p class="desc">High-level audit with your four core scores and your top priority fixes.</p></div>
+        <div class="depth"><div class="row"><span class="name">Deep Audit</span><span class="price">$97</span></div><p class="desc">Full multi-module analysis, prioritized roadmap, and executive summary report.</p></div>
+        <div class="depth"><div class="row"><span class="name">Operator</span><span class="price">$297<small>/qtr</small></span></div><p class="desc">Quarterly re-audits to track progress and catch new leaks as you grow.</p></div>
+        <a href="https://app.presetprofit.com/audit" class="btn btn-ghost">Start Free</a>
+      </div>
+      <!-- Professional -->
+      <div class="tier featured reveal d2">
+        <div class="badge">Most Popular</div>
+        <h3>Professional</h3>
+        <p class="who">For consultants &amp; growing companies acting on the findings, not just reading them.</p>
+        <div class="depth"><div class="row"><span class="name">Professional Audit</span><span class="price">$497</span></div><p class="desc">Deeper analysis with detailed conversion &amp; automation breakdowns and impact estimates.</p></div>
+        <div class="depth"><div class="row"><span class="name">Growth Intelligence</span><span class="price">$1,200</span></div><p class="desc">Full strategic roadmap, competitor context, and a sequenced 90-day execution plan.</p></div>
+        <div class="depth"><div class="row"><span class="name">Embedded</span><span class="price">$2,500<small>/mo</small></span></div><p class="desc">Continuous monitoring with monthly intelligence reviews and a standing roadmap.</p></div>
+        <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Choose Professional</a>
+      </div>
+      <!-- Agency / Enterprise -->
+      <div class="tier reveal d3">
+        <div class="badge">&nbsp;</div>
+        <h3>Agency / Enterprise</h3>
+        <p class="who">For agencies &amp; operators running audits across many businesses — or overhauling one completely.</p>
+        <div class="depth"><div class="row"><span class="name">Multi-Account</span><span class="price">$4,000</span></div><p class="desc">Audit a portfolio of clients or locations with consolidated reporting.</p></div>
+        <div class="depth"><div class="row"><span class="name">White-Label</span><span class="price">$8,000</span></div><p class="desc">Run branded audits under your own firm, packaged for client delivery.</p></div>
+        <div class="depth"><div class="row"><span class="name">Complete Overhaul</span><span class="price">$15,000+</span></div><p class="desc">A full technical &amp; growth audit of an entire business, with a hands-on remediation plan.</p></div>
+        <a href="https://app.presetprofit.com/audit" class="btn btn-ghost">Talk to Us</a>
+      </div>
+    </div>
+    <p class="reveal" style="text-align:center;font-size:11.5px;color:var(--mute);margin-top:1.8rem;letter-spacing:.4px">Prices shown are launch reference pricing. The free tier never promises enterprise-grade intelligence it can't deliver — depth scales with the tier.</p>
+  </div>
+</section>
+
+<!-- ───────────────── TRUST ───────────────── -->
+<section id="trust" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      <span class="eyebrow">Why You Can Trust The Output</span>
+      <h2 class="h2">Transparent method.<br><em class="cream">No invented numbers.</em></h2>
+      <p class="lead">We'd rather show you how the audit works than pad a page with testimonials we don't have yet. Here's exactly what you're getting — and you can <a href="methodology.html" style="color:var(--cream);border-bottom:1px solid var(--gold-line)">read the full methodology</a> anytime.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-item reveal d1">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 8l3 3 8-8" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg></div>
+        <h4>Transparent methodology</h4>
+        <p>Every score and recommendation is traceable to what we actually analyzed — your site, offer, funnel, and operational signals. No black box, no vague grades.</p>
+      </div>
+      <div class="trust-item reveal d2">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="2.5" y="6" width="10" height="7" rx="1" stroke="#C4A882" stroke-width="1.2" fill="none"/><path d="M5 6V4.5a2.5 2.5 0 015 0V6" stroke="#C4A882" stroke-width="1.2" fill="none"/></svg></div>
+        <h4>Security-conscious by design</h4>
+        <p>We analyze your public business presence and the information you choose to share. We don't ask for credentials you shouldn't hand out, and your data isn't sold.</p>
+      </div>
+      <div class="trust-item reveal d3">
+        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="5.5" stroke="#C4A882" stroke-width="1.2" fill="none"/><path d="M7.5 5v3l2 1.5" stroke="#C4A882" stroke-width="1.2" fill="none"/></svg></div>
+        <h4>Built for operators</h4>
+        <p>Designed for founders, consultants, agencies, and operators — people who need a decision, not a 60-page PDF. Sample outputs are shown, not promised.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── USE CASES ───────────────── -->
+<section id="usecases" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Who It's For</span>
+      <h2 class="h2">One engine.<br><em class="cream">Many businesses.</em></h2>
+    </div>
+    <div class="uc">
+      <div class="uc-card reveal d1"><div class="k">Local Businesses</div><p>Find why calls and bookings slip away, and which fixes recover the most foot traffic and revenue.</p></div>
+      <div class="uc-card reveal d2"><div class="k">Agencies</div><p>Audit clients in minutes, win pitches with hard findings, and deliver white-labeled intelligence at scale.</p></div>
+      <div class="uc-card reveal d3"><div class="k">SaaS Companies</div><p>Pinpoint activation friction, pricing-page leaks, and onboarding gaps that quietly suppress conversion.</p></div>
+      <div class="uc-card reveal d1"><div class="k">Consultants</div><p>Walk into every engagement with a scored diagnostic that justifies your fee before you say a word.</p></div>
+      <div class="uc-card reveal d2"><div class="k">Automation Companies</div><p>Surface the highest-ROI automation gaps in a prospect's operation — and price the work with confidence.</p></div>
+      <div class="uc-card reveal d3"><div class="k">Creators &amp; Digital Products</div><p>See where your funnel, offer, and follow-up lose buyers between interest and checkout.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── AUDIT FORM ───────────────── -->
+<section id="audit" class="section-pad">
+  <div class="wrap">
+    <div class="audit-box reveal">
+      <span class="eyebrow">Start Your Free Audit</span>
+      <h2 class="h2" style="margin-top:1.1rem">See what your business<br><em class="cream">is leaving on the table.</em></h2>
+      <p class="lead" style="margin-top:1rem;max-width:480px;margin-left:auto;margin-right:auto">Enter your website and where to send it. We'll run your audit and deliver your scored report. No call required.</p>
+
+      <a href="https://app.presetprofit.com/audit" class="btn btn-primary" style="margin-top:1.5rem">Run My Free Audit
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
+      <p class="form-note">We analyze your public business presence. We don't ask for passwords or sensitive credentials, and we don't sell your data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── FINAL CTA ───────────────── -->
+<section id="final" class="section-pad" style="background:#060608">
+  <div class="wrap">
+    <span class="eyebrow reveal">The Audit Is Free. The Blind Spot Isn't.</span>
+    <h2 class="reveal d1">Every month you wait is<br><em class="cream">money you can't see.</em></h2>
+    <p class="lead reveal d2">The problems are already there. The only question is whether you find them before they cost you another quarter.</p>
+    <div class="reveal d3" style="margin-top:2.6rem">
+      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── FOOTER ───────────────── -->
+<style>
+  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem}
+  .foot-col h5{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chrome);margin-bottom:1.1rem}
+  .foot-col a{display:block;font-size:13px;color:var(--silver);margin-bottom:.7rem;transition:color .3s}
+  .foot-col a:hover{color:var(--warm-white)}
+  .foot-col .brand{margin-bottom:1rem}
+  .foot-col p{font-size:12.5px;color:var(--mute);line-height:1.7;max-width:240px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.8rem}
+  .foot-bottom .links{display:flex;gap:1.4rem;flex-wrap:wrap}
+  .foot-bottom .links a{font-size:10px;letter-spacing:1.5px;color:var(--mute);text-transform:uppercase;transition:color .3s}
+  .foot-bottom .links a:hover{color:var(--silver)}
+  @media(max-width:900px){.foot-top{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
+</style>
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-col">
+        <a href="#hero" class="brand">Preset <b>&amp;</b> Profit</a>
+        <p>Independent business intelligence audits for founders, consultants, agencies, and operators.</p>
+      </div>
+      <div class="foot-col"><h5>Product</h5>
+        <a href="#features">What It Finds</a>
+        <a href="sample-report.html">Sample Report</a>
+        <a href="#pricing">Pricing</a>
+        <a href="methodology.html">Methodology</a>
+      </div>
+      <div class="foot-col"><h5>Company</h5>
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="foot-col"><h5>Legal</h5>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-legal">© 2026 Preset &amp; Profit. All rights reserved.</div>
+      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Nav scroll state ── */
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* ── Close mobile menu on link click ── */
+  document.querySelectorAll('#navlinks a').forEach(a =>
+    a.addEventListener('click', () => document.getElementById('navlinks').classList.remove('open')));
+
+  /* ── Reveal on scroll ── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.12, rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── Audit form: graceful submit ──
+     If a form action URL is set (e.g. Formspree), it posts there.
+     Otherwise we prevent default and show the confirmation state. ── */
+  const form = document.getElementById('auditForm');
+  if (form) form.addEventListener('submit', (e) => {
+    const hasBackend = form.getAttribute('action') && form.getAttribute('action').trim().length;
+    if (!hasBackend){
+      e.preventDefault();
+      form.style.display = 'none';
+      document.getElementById('formSuccess').classList.add('show');
     }
+    // If hasBackend, let it submit normally (and you can add AJAX later).
+  });
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: var(--warm-white);
-      font-family: var(--sans);
-      font-weight: 300;
-      overflow-x: hidden;
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 2px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #2a2a2a; }
-
-    /* Section reveals */
-    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.15s; }
-    .reveal-delay-2 { transition-delay: 0.3s; }
-    .reveal-delay-3 { transition-delay: 0.45s; }
-    .reveal-delay-4 { transition-delay: 0.6s; }
-
-    /* Node pulse */
-    @keyframes nodePulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
-    }
-
-    /* Line draw */
-    @keyframes lineDraw {
-      from { stroke-dashoffset: 1000; opacity: 0; }
-      to { stroke-dashoffset: 0; opacity: 1; }
-    }
-
-    /* Float drift */
-    @keyframes drift {
-      0%, 100% { transform: translateY(0px) translateX(0px); }
-      25% { transform: translateY(-8px) translateX(4px); }
-      50% { transform: translateY(-4px) translateX(-6px); }
-      75% { transform: translateY(-12px) translateX(2px); }
-    }
-
-    /* Ambient glow */
-    @keyframes ambientGlow {
-      0%, 100% { opacity: 0.03; }
-      50% { opacity: 0.07; }
-    }
-
-    /* Data flow */
-    @keyframes dataFlow {
-      0% { stroke-dashoffset: 200; opacity: 0; }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.8; }
-      100% { stroke-dashoffset: 0; opacity: 0; }
-    }
-
-    /* Scan line */
-    @keyframes scanline {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(100vh); }
-    }
-
-    /* Text reveal char by char */
-    @keyframes charReveal {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* CTA pulse ring */
-    @keyframes ringExpand {
-      0% { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(2.2); opacity: 0; }
-    }
-
-    /* Blink cursor */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    .cursor-blink { animation: blink 1.2s ease-in-out infinite; }
-
-    /* Node active pulse */
-    @keyframes nodeActive {
-      0% { box-shadow: 0 0 0 0 rgba(196,168,130,0.4); }
-      70% { box-shadow: 0 0 0 12px rgba(196,168,130,0); }
-      100% { box-shadow: 0 0 0 0 rgba(196,168,130,0); }
-    }
-
-    .node-active { animation: nodeActive 2s ease-out infinite; }
-  `}</style>
-);
-
-// ─── THREE.JS HERO CANVAS ─────────────────────────────────────────────────────
-function HeroCanvas() {
-  const canvasRef = useRef(null);
-  const animRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
+  /* ── Hero particle network (vanilla canvas, zero deps) ── */
+  (function(){
+    const canvas = document.getElementById('heroCanvas');
     if (!canvas) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr, nodes = [], raf;
+    const COUNT = window.innerWidth < 700 ? 36 : 64;
+    const MAXD = 130;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-    camera.position.z = 5;
-
-    // Nodes
-    const NODE_COUNT = 80;
-    const positions = new Float32Array(NODE_COUNT * 3);
-    const nodeData = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      const x = (Math.random() - 0.5) * 14;
-      const y = (Math.random() - 0.5) * 10;
-      const z = (Math.random() - 0.5) * 8;
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
-      nodeData.push({
-        x, y, z,
-        vx: (Math.random() - 0.5) * 0.003,
-        vy: (Math.random() - 0.5) * 0.003,
-        vz: (Math.random() - 0.5) * 0.002,
-      });
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
     }
-
-    const pointGeo = new THREE.BufferGeometry();
-    const posAttr = new THREE.BufferAttribute(positions, 3);
-    posAttr.setUsage(THREE.DynamicDrawUsage);
-    pointGeo.setAttribute('position', posAttr);
-
-    const pointMat = new THREE.PointsMaterial({
-      color: 0x888888, size: 0.04, sizeAttenuation: true, transparent: true, opacity: 0.7,
-    });
-    const points = new THREE.Points(pointGeo, pointMat);
-    scene.add(points);
-
-    // Lines between nearby nodes
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x2a2a2a, transparent: true, opacity: 0.5 });
-    const lineGeo = new THREE.BufferGeometry();
-    const linePositions = new Float32Array(NODE_COUNT * NODE_COUNT * 6);
-    const lineAttr = new THREE.BufferAttribute(linePositions, 3);
-    lineAttr.setUsage(THREE.DynamicDrawUsage);
-    lineGeo.setAttribute('position', lineAttr);
-    const lineMesh = new THREE.LineSegments(lineGeo, lineMat);
-    scene.add(lineMesh);
-
-    const MAX_DIST = 3.5;
-    let frame = 0;
-
-    const animate = () => {
-      animRef.current = requestAnimationFrame(animate);
-      frame++;
-
-      // Update node positions
-      for (let i = 0; i < NODE_COUNT; i++) {
-        const n = nodeData[i];
-        n.x += n.vx;
-        n.y += n.vy;
-        n.z += n.vz;
-        if (Math.abs(n.x) > 7) n.vx *= -1;
-        if (Math.abs(n.y) > 5) n.vy *= -1;
-        if (Math.abs(n.z) > 4) n.vz *= -1;
-        positions[i * 3] = n.x;
-        positions[i * 3 + 1] = n.y;
-        positions[i * 3 + 2] = n.z;
+    function seed(){
+      nodes = [];
+      for (let i=0;i<COUNT;i++){
+        nodes.push({ x:Math.random()*w, y:Math.random()*h,
+          vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25 });
       }
-      posAttr.needsUpdate = true;
-
-      // Update lines
-      let lineIdx = 0;
-      for (let i = 0; i < NODE_COUNT; i++) {
-        for (let j = i + 1; j < NODE_COUNT; j++) {
-          const dx = nodeData[i].x - nodeData[j].x;
-          const dy = nodeData[i].y - nodeData[j].y;
-          const dz = nodeData[i].z - nodeData[j].z;
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist < MAX_DIST && lineIdx < linePositions.length - 6) {
-            linePositions[lineIdx++] = nodeData[i].x;
-            linePositions[lineIdx++] = nodeData[i].y;
-            linePositions[lineIdx++] = nodeData[i].z;
-            linePositions[lineIdx++] = nodeData[j].x;
-            linePositions[lineIdx++] = nodeData[j].y;
-            linePositions[lineIdx++] = nodeData[j].z;
+    }
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+      for (const n of nodes){
+        n.x+=n.vx; n.y+=n.vy;
+        if (n.x<0||n.x>w) n.vx*=-1;
+        if (n.y<0||n.y>h) n.vy*=-1;
+      }
+      // lines
+      for (let i=0;i<nodes.length;i++){
+        for (let j=i+1;j<nodes.length;j++){
+          const a=nodes[i], b=nodes[j];
+          const dx=a.x-b.x, dy=a.y-b.y;
+          const d=Math.hypot(dx,dy);
+          if (d<MAXD){
+            const o=(1-d/MAXD)*.22;
+            ctx.strokeStyle='rgba(196,168,130,'+o+')';
+            ctx.lineWidth=.6;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
           }
         }
       }
-      lineGeo.setDrawRange(0, lineIdx / 3);
-      lineAttr.needsUpdate = true;
-
-      scene.rotation.y = Math.sin(frame * 0.0003) * 0.15;
-      scene.rotation.x = Math.sin(frame * 0.0002) * 0.06;
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    const onResize = () => {
-      const w = canvas.clientWidth, h = canvas.clientHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    };
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener('resize', onResize);
-      renderer.dispose();
-    };
-  }, []);
-
-  return (
-    <canvas ref={canvasRef} style={{
-      position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block',
-    }} />
-  );
-}
-
-// ─── INTERSECTION OBSERVER HOOK ───────────────────────────────────────────────
-function useReveal() {
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
-// ─── SVG WORKFLOW NETWORK ─────────────────────────────────────────────────────
-function WorkflowNetwork({ visible }) {
-  const nodes = [
-    { id: 'core', x: 50, y: 50, label: 'Preset & Profit', primary: true },
-    { id: 'leads', x: 20, y: 18, label: 'Lead Recovery' },
-    { id: 'followup', x: 78, y: 18, label: 'AI Follow-Up' },
-    { id: 'content', x: 8, y: 50, label: 'Content Systems' },
-    { id: 'schedule', x: 92, y: 50, label: 'Scheduling' },
-    { id: 'crm', x: 20, y: 82, label: 'CRM Integration' },
-    { id: 'pipeline', x: 78, y: 82, label: 'Client Pipelines' },
-    { id: 'auto', x: 50, y: 88, label: 'Automations' },
-  ];
-
-  const edges = [
-    ['core', 'leads'], ['core', 'followup'], ['core', 'content'],
-    ['core', 'schedule'], ['core', 'crm'], ['core', 'pipeline'], ['core', 'auto'],
-    ['leads', 'followup'], ['crm', 'pipeline'], ['auto', 'crm'], ['auto', 'pipeline'],
-    ['content', 'schedule'],
-  ];
-
-  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
-
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-      <defs>
-        <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#c4a882" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#c4a882" stopOpacity="0" />
-        </radialGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="0.3" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-
-      {/* Edges */}
-      {edges.map(([a, b], i) => {
-        const na = nodeMap[a], nb = nodeMap[b];
-        const len = Math.sqrt((nb.x - na.x) ** 2 + (nb.y - na.y) ** 2) * 10;
-        return (
-          <line key={i} x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
-            stroke="#2a2a2a" strokeWidth="0.15"
-            style={{
-              strokeDasharray: len,
-              strokeDashoffset: visible ? 0 : len,
-              transition: `stroke-dashoffset ${0.8 + i * 0.08}s cubic-bezier(0.4,0,0.2,1) ${i * 0.07}s`,
-              opacity: visible ? 0.8 : 0,
-            }}
-          />
-        );
-      })}
-
-      {/* Nodes */}
-      {nodes.map((n, i) => (
-        <g key={n.id} style={{
-          opacity: visible ? 1 : 0,
-          transition: `opacity 0.6s ease ${0.3 + i * 0.1}s`,
-        }}>
-          {n.primary && (
-            <circle cx={n.x} cy={n.y} r={4} fill="url(#nodeGrad)"
-              style={{ animation: visible ? 'ambientGlow 4s ease-in-out infinite' : 'none' }}
-            />
-          )}
-          <circle cx={n.x} cy={n.y} r={n.primary ? 1.4 : 0.8}
-            fill={n.primary ? '#c4a882' : '#2a2a2a'}
-            stroke={n.primary ? '#c4a882' : '#444'}
-            strokeWidth={n.primary ? 0 : 0.1}
-            filter="url(#glow)"
-          />
-          <text x={n.x} y={n.primary ? n.y + 3 : (n.y > 50 ? n.y + 2.5 : n.y - 1.8)}
-            textAnchor="middle" fontSize={n.primary ? 1.8 : 1.4}
-            fill={n.primary ? '#c4a882' : '#888'}
-            fontFamily="'Sora', sans-serif"
-            fontWeight={n.primary ? '400' : '300'}
-          >
-            {n.label}
-          </text>
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-// ─── PROCESS STEP ─────────────────────────────────────────────────────────────
-function ProcessStep({ number, title, desc, detail, delay }) {
-  return (
-    <div className="reveal" style={{ transitionDelay: `${delay}s`, display: 'flex', gap: '3rem', alignItems: 'flex-start' }}>
-      <div style={{ flexShrink: 0, width: '1px', background: 'linear-gradient(180deg, #2a2a2a 0%, #444 50%, #2a2a2a 100%)', height: '100%', minHeight: '120px', position: 'relative', marginTop: '8px' }}>
-        <div style={{
-          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-          width: '8px', height: '8px', borderRadius: '50%',
-          background: '#c4a882', boxShadow: '0 0 12px rgba(196,168,130,0.5)',
-        }} />
-      </div>
-      <div style={{ paddingBottom: '3rem' }}>
-        <div style={{ fontSize: '11px', letterSpacing: '3px', color: '#444', marginBottom: '0.5rem', fontFamily: 'var(--sans)', fontWeight: 400 }}>
-          {String(number).padStart(2, '0')}
-        </div>
-        <h3 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--warm-white)', marginBottom: '0.75rem', lineHeight: 1.2 }}>
-          {title}
-        </h3>
-        <p style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--chrome)', maxWidth: '380px', marginBottom: '0.5rem' }}>{desc}</p>
-        {detail && <p style={{ fontSize: '12px', lineHeight: 1.7, color: '#444', maxWidth: '340px', fontStyle: 'italic' }}>{detail}</p>}
-      </div>
-    </div>
-  );
-}
-
-// ─── BEFORE / AFTER CARD ──────────────────────────────────────────────────────
-function TransformCard({ title, before, after, delay }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div className="reveal" style={{ transitionDelay: `${delay}s` }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div style={{
-        background: 'linear-gradient(135deg, #111 0%, #0d0d0d 100%)',
-        border: `1px solid ${hovered ? '#2a2a2a' : '#1a1a1a'}`,
-        padding: '2.5rem',
-        transition: 'border-color 0.4s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1)',
-        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-      }}>
-        <div style={{ fontSize: '11px', letterSpacing: '3px', color: '#c4a882', marginBottom: '1.5rem', fontWeight: 400 }}>
-          {title}
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#333', marginBottom: '1rem', fontWeight: 400 }}>BEFORE</div>
-            {before.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
-                <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333', flexShrink: 0 }} />
-                <span style={{ fontSize: '13px', color: '#444', lineHeight: 1.4 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#c4a882', marginBottom: '1rem', fontWeight: 400 }}>AFTER</div>
-            {after.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
-                <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#c4a882', flexShrink: 0 }} />
-                <span style={{ fontSize: '13px', color: 'var(--silver)', lineHeight: 1.4 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── STAT COUNTER ─────────────────────────────────────────────────────────────
-function StatItem({ value, label, delay }) {
-  return (
-    <div className="reveal" style={{ transitionDelay: `${delay}s`, textAlign: 'center' }}>
-      <div style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 300, color: 'var(--warm-white)', lineHeight: 1 }}>
-        {value}
-      </div>
-      <div style={{ fontSize: '11px', letterSpacing: '2.5px', color: 'var(--chrome)', marginTop: '0.75rem', fontWeight: 300 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
-// ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
-export default function PresetAndProfit() {
-  const [workflowVisible, setWorkflowVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const [ctaHovered, setCtaHovered] = useState(false);
-  const workflowRef = useRef(null);
-
-  useReveal();
-
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setWorkflowVisible(true); },
-      { threshold: 0.2 }
-    );
-    if (workflowRef.current) observer.observe(workflowRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const section = (id, children, bg = 'var(--black)', extra = {}) => (
-    <section id={id} style={{ position: 'relative', background: bg, ...extra }}>
-      {children}
-    </section>
-  );
-
-  return (
-    <>
-      <GlobalStyle />
-
-      {/* ── NAV ── */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '1.5rem 4rem',
-        background: scrollY > 80 ? 'rgba(0,0,0,0.85)' : 'transparent',
-        backdropFilter: scrollY > 80 ? 'blur(12px)' : 'none',
-        borderBottom: scrollY > 80 ? '1px solid #111' : '1px solid transparent',
-        transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
-      }}>
-        <div style={{ fontFamily: 'var(--serif)', fontSize: '1.1rem', fontWeight: 400, letterSpacing: '0.5px', color: 'var(--warm-white)' }}>
-          Preset <span style={{ color: '#c4a882' }}>&</span> Profit
-        </div>
-        <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
-          {['Systems', 'Process', 'Results'].map(item => (
-            <span key={item} style={{ fontSize: '12px', letterSpacing: '1.5px', color: 'var(--chrome)', cursor: 'pointer',
-              transition: 'color 0.3s', fontWeight: 300,
-              ':hover': { color: 'var(--warm-white)' }
-            }}>{item.toUpperCase()}</span>
-          ))}
-          <div style={{
-            padding: '0.5rem 1.5rem', border: '1px solid #2a2a2a',
-            fontSize: '11px', letterSpacing: '2px', color: 'var(--cream)',
-            cursor: 'pointer', fontWeight: 400,
-            transition: 'all 0.3s ease',
-          }}>
-            ENTER
-          </div>
-        </div>
-      </nav>
-
-      {/* ── SECTION 1: HERO ── */}
-      {section('hero', (
-        <div style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-          <HeroCanvas />
-
-          {/* Ambient center glow */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(196,168,130,0.04) 0%, transparent 70%)',
-            animation: 'ambientGlow 6s ease-in-out infinite',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Scanline effect */}
-          <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', opacity: 0.015,
-          }}>
-            <div style={{
-              position: 'absolute', width: '100%', height: '2px',
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)',
-              animation: 'scanline 8s linear infinite',
-            }} />
-          </div>
-
-          {/* Hero content */}
-          <div style={{ position: 'relative', textAlign: 'center', zIndex: 2, padding: '0 2rem' }}>
-            <div style={{
-              fontSize: '10px', letterSpacing: '5px', color: 'var(--chrome)',
-              marginBottom: '2rem', fontWeight: 300,
-              animation: 'charReveal 1s ease 0.3s both',
-            }}>
-              INTELLIGENT SYSTEMS — MODERN BUSINESS
-            </div>
-
-            <h1 style={{
-              fontFamily: 'var(--serif)', fontWeight: 300,
-              fontSize: 'clamp(3rem, 8vw, 7rem)',
-              lineHeight: 1.05, color: 'var(--warm-white)',
-              letterSpacing: '-0.02em',
-              animation: 'charReveal 1.2s cubic-bezier(0.16,1,0.3,1) 0.5s both',
-              maxWidth: '900px',
-            }}>
-              Infrastructure that<br />
-              <em style={{ color: 'var(--cream)', fontStyle: 'italic', fontWeight: 300 }}>thinks for itself.</em>
-            </h1>
-
-            <p style={{
-              marginTop: '2rem', fontSize: '15px', color: 'var(--chrome)',
-              maxWidth: '420px', margin: '2rem auto 0', lineHeight: 1.8,
-              fontWeight: 300,
-              animation: 'charReveal 1s ease 0.9s both',
-            }}>
-              We build the invisible systems that convert, follow up,
-              and operate — so you never have to.
-            </p>
-
-            <div style={{ marginTop: '3rem', animation: 'charReveal 1s ease 1.2s both' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: '1rem',
-                padding: '0.9rem 2.5rem',
-                border: '1px solid rgba(196,168,130,0.3)',
-                color: 'var(--cream)', fontSize: '11px', letterSpacing: '3px',
-                cursor: 'pointer', fontWeight: 400,
-                transition: 'all 0.4s ease',
-                background: 'rgba(196,168,130,0.05)',
-              }}>
-                ENTER THE SYSTEM
-                <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-                  <path d="M0 5h14M10 1l4 4-4 4" stroke="#c4a882" strokeWidth="0.8" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Scroll indicator */}
-          <div style={{
-            position: 'absolute', bottom: '3rem', left: '50%', transform: 'translateX(-50%)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
-            opacity: 0.4, animation: 'charReveal 1s ease 2s both',
-          }}>
-            <div style={{ fontSize: '9px', letterSpacing: '3px', color: 'var(--chrome)' }}>SCROLL</div>
-            <div style={{ width: '1px', height: '40px', background: 'linear-gradient(180deg, #444, transparent)' }} />
-          </div>
-
-          {/* Corner coords */}
-          <div style={{ position: 'absolute', bottom: '3rem', right: '4rem', fontSize: '10px', color: '#2a2a2a', letterSpacing: '1px', fontFamily: 'var(--sans)' }}>
-            37.7749° N, 122.4194° W
-          </div>
-          <div style={{ position: 'absolute', top: '50%', left: '2rem', fontSize: '9px', color: '#222', letterSpacing: '2px', writingMode: 'vertical-rl', transform: 'translateY(-50%)' }}>
-            NODE 001 — ACTIVE
-          </div>
-        </div>
-      ))}
-
-      {/* ── SECTION 2: WORKFLOW NETWORK ── */}
-      {section('workflow', (
-        <div style={{ padding: '8rem 4rem', maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center' }}>
-            <div>
-              <div className="reveal" style={{ fontSize: '10px', letterSpacing: '4px', color: 'var(--chrome)', marginBottom: '1.5rem' }}>
-                THE SYSTEM
-              </div>
-              <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 300, lineHeight: 1.15, color: 'var(--warm-white)', marginBottom: '2rem' }}>
-                Every service.<br />
-                <em style={{ color: 'var(--cream)' }}>One living network.</em>
-              </h2>
-              <p className="reveal reveal-delay-2" style={{ fontSize: '14px', lineHeight: 1.9, color: 'var(--chrome)', marginBottom: '2rem', maxWidth: '380px' }}>
-                Our infrastructure connects every touchpoint of your business
-                into a single, intelligent operating layer. Nothing falls through.
-                Everything flows.
-              </p>
-
-              <div className="reveal reveal-delay-3" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {['Lead Recovery', 'AI Follow-Up', 'CRM Integration', 'Client Pipelines', 'Content Systems'].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ width: '6px', height: '1px', background: '#c4a882' }} />
-                    <span style={{ fontSize: '13px', color: 'var(--silver)', letterSpacing: '0.5px' }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div ref={workflowRef} style={{ height: '500px', position: 'relative' }}>
-              <WorkflowNetwork visible={workflowVisible} />
-            </div>
-          </div>
-        </div>
-      ), '#080808')}
-
-      {/* Stats band */}
-      <div style={{ background: '#0a0a0a', borderTop: '1px solid #111', borderBottom: '1px solid #111', padding: '5rem 4rem' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '3rem' }}>
-          <StatItem value="94%" label="LEAD RECOVERY RATE" delay={0} />
-          <StatItem value="3×" label="PIPELINE VELOCITY" delay={0.1} />
-          <StatItem value="48H" label="DEPLOYMENT TIME" delay={0.2} />
-          <StatItem value="∞" label="OPERATIONAL SCALE" delay={0.3} />
-        </div>
-      </div>
-
-      {/* ── SECTION 3: PROCESS ── */}
-      {section('process', (
-        <div style={{ padding: '8rem 4rem', maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8rem' }}>
-            <div>
-              <div className="reveal" style={{ fontSize: '10px', letterSpacing: '4px', color: 'var(--chrome)', marginBottom: '1.5rem' }}>
-                THE PROCESS
-              </div>
-              <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, lineHeight: 1.2, color: 'var(--warm-white)', marginBottom: '1.5rem' }}>
-                Chaos becomes<br />
-                <em style={{ color: 'var(--cream)' }}>architecture.</em>
-              </h2>
-              <p className="reveal reveal-delay-2" style={{ fontSize: '14px', lineHeight: 1.9, color: 'var(--chrome)', maxWidth: '340px' }}>
-                We don't just build automations. We re-engineer how your business operates at every level.
-              </p>
-
-              {/* Animated system mockup */}
-              <div className="reveal reveal-delay-3" style={{ marginTop: '3rem', background: '#0d0d0d', border: '1px solid #1a1a1a', padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ fontSize: '9px', letterSpacing: '2px', color: '#333', marginBottom: '1rem' }}>LIVE SYSTEM — NODE ACTIVE</div>
-                {[
-                  { label: 'Lead captured', status: 'complete', time: '09:41' },
-                  { label: 'AI qualification triggered', status: 'complete', time: '09:41' },
-                  { label: 'Follow-up sequence initiated', status: 'complete', time: '09:42' },
-                  { label: 'CRM record updated', status: 'active', time: '09:43' },
-                  { label: 'Pipeline stage advanced', status: 'pending', time: '—' },
-                ].map((row, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid #111', opacity: row.status === 'pending' ? 0.3 : 1 }}>
-                    <div style={{
-                      width: '6px', height: '6px', borderRadius: '50%', flexShrink: 0,
-                      background: row.status === 'complete' ? '#c4a882' : row.status === 'active' ? '#888' : '#222',
-                      animation: row.status === 'active' ? 'nodePulse 2s ease-in-out infinite' : 'none',
-                    }} />
-                    <span style={{ fontSize: '12px', color: row.status === 'complete' ? '#888' : '#555', flex: 1 }}>{row.label}</span>
-                    <span style={{ fontSize: '10px', color: '#2a2a2a', fontFamily: 'monospace' }}>{row.time}</span>
-                  </div>
-                ))}
-                <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: '2px', background: 'linear-gradient(180deg, transparent, #c4a882, transparent)', opacity: 0.3, animation: 'scanline 3s linear infinite' }} />
-              </div>
-            </div>
-
-            <div style={{ paddingTop: '4rem' }}>
-              <ProcessStep number={1} title="System Audit" desc="We map every gap, every missed touch, every broken handoff in your current operation." detail="Complete infrastructure review in 24 hours." delay={0} />
-              <ProcessStep number={2} title="Architecture Design" desc="Custom workflow blueprints built to your business logic — not generic templates." detail="Every node placed with intent." delay={0.1} />
-              <ProcessStep number={3} title="Deployment" desc="Your intelligent system goes live. Automations activate. Pipelines start flowing." detail="48-hour deployment standard." delay={0.2} />
-              <ProcessStep number={4} title="Continuous Intelligence" desc="The system learns, adapts, and optimizes — running invisibly in the background." detail="Ongoing optimization included." delay={0.3} />
-            </div>
-          </div>
-        </div>
-      ))}
-
-      {/* ── SECTION 4: TRANSFORMATIONS ── */}
-      {section('cases', (
-        <div style={{ padding: '8rem 4rem', maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '5rem' }}>
-            <div className="reveal" style={{ fontSize: '10px', letterSpacing: '4px', color: 'var(--chrome)', marginBottom: '1.5rem' }}>
-              SYSTEM TRANSFORMATIONS
-            </div>
-            <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 300, lineHeight: 1.15, color: 'var(--warm-white)', maxWidth: '600px' }}>
-              Before the system.<br />
-              <em style={{ color: 'var(--cream)' }}>After the system.</em>
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <TransformCard
-              title="SERVICE BUSINESS"
-              before={['Missed calls, lost revenue', 'Manual follow-up attempts', 'No visibility into pipeline', 'Leads going cold in hours']}
-              after={['Instant AI follow-up on every lead', 'Automated qualification sequences', 'Real-time pipeline dashboard', 'Persistent 30-day nurture system']}
-              delay={0}
-            />
-            <TransformCard
-              title="CONSULTING PRACTICE"
-              before={['Scattered client onboarding', 'Manual scheduling chaos', 'Disconnected communications', 'Revenue leaks undetected']}
-              after={['Seamless automated onboarding', 'Self-scheduling with smart routing', 'Centralized CRM intelligence', 'Revenue recovery automation']}
-              delay={0.1}
-            />
-            <TransformCard
-              title="E-COMMERCE OPERATION"
-              before={['Cart abandonment unaddressed', 'No post-purchase flows', 'Manual customer service load', 'Fragmented analytics']}
-              after={['Multi-touch recovery sequences', 'Intelligent upsell pipelines', 'AI-assisted support routing', 'Unified performance layer']}
-              delay={0.2}
-            />
-            <TransformCard
-              title="AGENCY INFRASTRUCTURE"
-              before={['Client reporting done manually', 'Project tracking in spreadsheets', 'Billing delays and gaps', 'No scalable processes']}
-              after={['Automated reporting pipelines', 'Real-time project intelligence', 'Seamless billing automation', 'Fully scalable architecture']}
-              delay={0.3}
-            />
-          </div>
-        </div>
-      ), '#080808')}
-
-      {/* ── SECTION 5: INTELLIGENCE LAYER ── */}
-      {section('intelligence', (
-        <div style={{
-          padding: '12rem 4rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center', position: 'relative', overflow: 'hidden',
-        }}>
-          {/* Ambient radial */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,168,130,0.04) 0%, transparent 65%)',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Decorative lines */}
-          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06 }} viewBox="0 0 100 100" preserveAspectRatio="none">
-            <line x1="0" y1="50" x2="100" y2="50" stroke="#888" strokeWidth="0.1" />
-            <line x1="50" y1="0" x2="50" y2="100" stroke="#888" strokeWidth="0.1" />
-            <circle cx="50" cy="50" r="30" stroke="#888" strokeWidth="0.08" fill="none" />
-            <circle cx="50" cy="50" r="15" stroke="#888" strokeWidth="0.06" fill="none" />
-          </svg>
-
-          <div className="reveal" style={{ fontSize: '10px', letterSpacing: '5px', color: 'var(--chrome)', marginBottom: '3rem' }}>
-            THE INVISIBLE LAYER
-          </div>
-          <h2 className="reveal reveal-delay-1" style={{
-            fontFamily: 'var(--serif)', fontWeight: 300,
-            fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
-            lineHeight: 1.1, color: 'var(--warm-white)',
-            maxWidth: '800px', letterSpacing: '-0.02em',
-          }}>
-            Technology should feel<br />
-            <em style={{ color: 'var(--cream)' }}>like nothing at all.</em>
-          </h2>
-          <p className="reveal reveal-delay-2" style={{
-            marginTop: '2.5rem', fontSize: '15px', lineHeight: 1.9,
-            color: 'var(--chrome)', maxWidth: '480px',
-          }}>
-            The best infrastructure is invisible. It operates silently,
-            intelligently, continuously — letting you focus entirely
-            on the work that requires your genius.
-          </p>
-
-          <div className="reveal reveal-delay-3" style={{ marginTop: '4rem', display: 'flex', gap: '4rem', justifyContent: 'center' }}>
-            {[
-              { label: 'Ambient Intelligence', desc: 'Systems that adapt in real-time' },
-              { label: 'Zero Friction', desc: 'Operations that run themselves' },
-              { label: 'Permanent Growth', desc: 'Infrastructure built to compound' },
-            ].map((item, i) => (
-              <div key={i} style={{ textAlign: 'center', maxWidth: '160px' }}>
-                <div style={{ width: '1px', height: '40px', background: 'linear-gradient(180deg, transparent, #444)', margin: '0 auto 1.5rem' }} />
-                <div style={{ fontSize: '12px', color: 'var(--silver)', marginBottom: '0.5rem', letterSpacing: '0.5px' }}>{item.label}</div>
-                <div style={{ fontSize: '11px', color: '#444', lineHeight: 1.5 }}>{item.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      {/* ── SECTION 6: FINAL CTA ── */}
-      {section('cta', (
-        <div style={{
-          padding: '10rem 4rem 8rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          textAlign: 'center', position: 'relative', overflow: 'hidden',
-        }}>
-          {/* Converging network lines */}
-          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.08 }} viewBox="0 0 200 120" preserveAspectRatio="none">
-            {[...Array(8)].map((_, i) => {
-              const angle = (i / 8) * Math.PI * 2;
-              const x = 100 + Math.cos(angle) * 80;
-              const y = 60 + Math.sin(angle) * 50;
-              return <line key={i} x1={x} y1={y} x2="100" y2="60" stroke="#888" strokeWidth="0.2" />;
-            })}
-            <circle cx="100" cy="60" r="3" stroke="#c4a882" strokeWidth="0.3" fill="none" />
-            <circle cx="100" cy="60" r="8" stroke="#c4a882" strokeWidth="0.1" fill="none" opacity="0.5" />
-          </svg>
-
-          <div className="reveal" style={{ fontSize: '10px', letterSpacing: '5px', color: 'var(--chrome)', marginBottom: '2rem' }}>
-            READY TO ENTER THE SYSTEM
-          </div>
-
-          <h2 className="reveal reveal-delay-1" style={{
-            fontFamily: 'var(--serif)', fontWeight: 300,
-            fontSize: 'clamp(2.5rem, 7vw, 6rem)',
-            lineHeight: 1.05, color: 'var(--warm-white)',
-            letterSpacing: '-0.02em', maxWidth: '900px',
-          }}>
-            Build systems that work<br />
-            <em style={{ color: 'var(--cream)' }}>while you create.</em>
-          </h2>
-
-          <p className="reveal reveal-delay-2" style={{ marginTop: '2rem', fontSize: '15px', color: 'var(--chrome)', maxWidth: '420px', lineHeight: 1.8 }}>
-            Your infrastructure awaits. Every lead, every follow-up,
-            every pipeline — orchestrated intelligently.
-          </p>
-
-          <div className="reveal reveal-delay-3" style={{ marginTop: '4rem', position: 'relative' }}>
-            {ctaHovered && (
-              <>
-                <div style={{ position: 'absolute', inset: '-20px', borderRadius: '50%', border: '1px solid rgba(196,168,130,0.3)', animation: 'ringExpand 1s ease-out infinite' }} />
-                <div style={{ position: 'absolute', inset: '-10px', borderRadius: '50%', border: '1px solid rgba(196,168,130,0.2)', animation: 'ringExpand 1s ease-out 0.3s infinite' }} />
-              </>
-            )}
-            <button
-              onMouseEnter={() => setCtaHovered(true)}
-              onMouseLeave={() => setCtaHovered(false)}
-              style={{
-                background: ctaHovered ? 'rgba(196,168,130,0.12)' : 'transparent',
-                border: `1px solid ${ctaHovered ? 'rgba(196,168,130,0.5)' : 'rgba(196,168,130,0.25)'}`,
-                color: 'var(--cream)', fontSize: '12px', letterSpacing: '4px',
-                padding: '1.2rem 3.5rem', cursor: 'pointer',
-                transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
-                fontFamily: 'var(--sans)', fontWeight: 400,
-                transform: ctaHovered ? 'scale(1.02)' : 'scale(1)',
-                position: 'relative', zIndex: 2,
-              }}
-            >
-              BUILD YOUR INFRASTRUCTURE
-            </button>
-          </div>
-
-          {/* Footer */}
-          <div style={{ marginTop: '8rem', width: '100%', maxWidth: '1000px', borderTop: '1px solid #111', paddingTop: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: '1rem', color: '#333', letterSpacing: '0.5px' }}>
-              Preset <span style={{ color: '#2a2a2a' }}>&</span> Profit
-            </div>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#222' }}>
-              INTELLIGENT SYSTEMS — © 2025
-            </div>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#222' }}>
-              NODE SYSTEM ACTIVE <span className="cursor-blink">_</span>
-            </div>
-          </div>
-        </div>
-      ), '#050505')}
-    </>
-  );
-}
+      // nodes
+      for (const n of nodes){
+        ctx.fillStyle='rgba(180,180,190,.5)';
+        ctx.beginPath(); ctx.arc(n.x,n.y,1.1,0,Math.PI*2); ctx.fill();
+      }
+      raf=requestAnimationFrame(tick);
+    }
+    function start(){ resize(); seed(); cancelAnimationFrame(raf); tick(); }
+    window.addEventListener('resize', () => { resize(); seed(); });
+    start();
+  })();
+</script>
+</body>
+</html>
