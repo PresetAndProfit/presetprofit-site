@@ -194,6 +194,7 @@ nav.scrolled{background:rgba(7,7,9,.78);backdrop-filter:blur(16px);-webkit-backd
 .dna-score .track{height:4px;border-radius:3px;background:#1a1a1e;overflow:hidden}
 .dna-score .bar{height:100%;width:0;border-radius:3px;transition:width 1s var(--ease)}
 .dna-hint{position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);z-index:3}
+.dna-mstage{display:none}
 
 /* ════════════════  COMPARISON  ════════════════ */
 .vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
@@ -488,9 +489,28 @@ footer{border-top:1px solid var(--line);padding:3.4rem 0 2.6rem;background:#0606
   .founder{grid-template-columns:1fr;gap:2.5rem}.founder-photo{max-width:420px}
   .engine{grid-template-columns:1fr}
   .sc-feature{grid-template-columns:1fr}.scf-vis{border-left:none;border-top:1px solid var(--line)}
-  .dna-wrap{grid-template-columns:1fr;justify-items:center;gap:1.2rem}
-  .dna-stages,.dna-out{display:none}
-  #dnascan{height:240vh}
+  /* ── Business DNA Scan · mobile vertical scroll sequence ── */
+  #dnascan{height:220vh}
+  .dna-sticky{height:100vh;height:100svh;flex-direction:column;justify-content:center;gap:1rem;padding:5rem 1.3rem 2rem;text-align:center}
+  .dna-glow{width:128vw;height:128vw}
+  .dna-eyebrow{position:static;top:auto;left:auto;transform:none;width:auto;order:1}
+  .dna-eyebrow h2{font-size:1.7rem;margin-top:.5rem}
+  .dna-mstage{display:block;order:2;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--scan);min-height:18px;font-weight:500;text-shadow:0 0 18px var(--scan-soft)}
+  .dna-wrap{display:contents}
+  .dna-orb{order:3;width:min(54vw,210px);height:min(54vw,210px);margin:.2rem auto}
+  .dna-orb .pl{display:none}
+  .dna-stages{display:flex!important;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:.4rem;order:4;width:100%;max-width:430px;max-height:150px;opacity:1;overflow:hidden;transition:opacity .4s var(--ease),max-height .5s var(--ease)}
+  .dna-stage{padding:.38rem .7rem;border-radius:100px;gap:.35rem;opacity:.4;background:rgba(13,13,16,.55);transform:none}
+  .dna-stage.active{transform:none}
+  .dna-stage .si{display:none}
+  .dna-stage .sl{font-size:10.5px}
+  .dna-stage .sx{display:none}
+  .dna-stage.done .sl::before{content:"\2713 ";color:var(--gold);font-weight:700}
+  .dna-out{display:flex!important;flex-direction:column;gap:.45rem;order:5;width:100%;max-width:330px;margin:0 auto;opacity:0;max-height:0;overflow:hidden;transform:translateY(8px);transition:opacity .5s var(--ease),transform .5s var(--ease),max-height .55s var(--ease)}
+  .dna-score{transform:none}
+  #dnascan.scan-complete .dna-stages{opacity:0;max-height:0;margin:0}
+  #dnascan.scan-complete .dna-out{opacity:1;transform:none;max-height:440px}
+  .dna-hint{position:static;bottom:auto;left:auto;transform:none;order:6;margin-top:.2rem}
 }
 @media(max-width:900px){
   .nav-links{display:none}
@@ -615,6 +635,7 @@ footer{border-top:1px solid var(--line);padding:3.4rem 0 2.6rem;background:#0606
       <span class="eyebrow"><span class="pip"></span>Signature · Live Diagnostic</span>
       <h2>Business DNA Scan</h2>
     </div>
+    <div class="dna-mstage" id="dnaMStage" aria-hidden="true">Initializing</div>
     <div class="dna-wrap">
       <!-- left: stages -->
       <div class="dna-stages" id="dnaStages">
@@ -1125,7 +1146,7 @@ function fmtMoney(v){return '$'+Math.round(v).toLocaleString('en-US');}
 /* ════ SIGNATURE #1 · Business DNA Scan (scroll-driven) ════ */
 (function(){
   const sec=document.getElementById('dnascan'); if(!sec) return;
-  const pctEl=document.getElementById('dnaPct'), statusEl=document.getElementById('dnaStatus'), hint=document.getElementById('dnaHint');
+  const pctEl=document.getElementById('dnaPct'), statusEl=document.getElementById('dnaStatus'), hint=document.getElementById('dnaHint'), mstage=document.getElementById('dnaMStage');
   const stages=[...document.querySelectorAll('#dnaStages .dna-stage')];
   const scores=[...document.querySelectorAll('#dnaOut .dna-score')];
   const STATUS=['Scanning website','Reading Google profile','Analyzing reviews','Tracing follow-up','Mapping visibility','Weighing trust','Modeling revenue','Diagnosis complete'];
@@ -1139,6 +1160,8 @@ function fmtMoney(v){return '$'+Math.round(v).toLocaleString('en-US');}
     const sf=prog*7;
     const si=Math.min(Math.floor(sf),7);
     statusEl.textContent=STATUS[Math.min(si,7)];
+    if(mstage)mstage.textContent=STATUS[Math.min(si,7)];
+    sec.classList.toggle('scan-complete',prog>=0.9);
     if(hint)hint.style.opacity=prog>0.04?'0':'1';
     stages.forEach((s,i)=>{s.classList.toggle('done',i<sf-1);s.classList.toggle('active',i>=sf-1&&i<sf);});
     scores.forEach(sc=>{const need=(+sc.dataset.i+1)/7;if(prog>=need-0.02){const v=+sc.dataset.v;sc.classList.add('show');sc.querySelector('.vv').textContent=Math.round(v*clamp((prog-(need-0.14))/0.14,0,1));sc.querySelector('.vv').style.color=sc.dataset.c;const bar=sc.querySelector('.bar');bar.style.background=sc.dataset.c;bar.style.width=(v*clamp((prog-(need-0.14))/0.14,0,1))+'%';}else{sc.classList.remove('show');}});
@@ -1147,10 +1170,13 @@ function fmtMoney(v){return '$'+Math.round(v).toLocaleString('en-US');}
     dots.forEach((d,i)=>{const ang=(i/dots.length)*Math.PI*2 - Math.PI/2 + prog*Math.PI*1.5;const lit=i/dots.length<=prog;d.style.transform=`translate(${Math.cos(ang)*R}px,${Math.sin(ang)*R}px)`;d.style.opacity=lit?1:.18;d.style.background=lit?'var(--gold)':'#3a3a41';d.style.boxShadow=lit?'0 0 10px var(--gold-glow)':'none';});
   }
   let ticking=false;
-  function update(){const total=sec.offsetHeight-window.innerHeight;const p=clamp((-sec.getBoundingClientRect().top)/total,0,1);prog=p;apply();}
-  window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{update();ticking=false;});},{passive:true});
-  window.addEventListener('resize',update);
-  if(reduce){prog=1;} update();
+  function update(){const total=Math.max(sec.offsetHeight-window.innerHeight,1);const p=clamp((-sec.getBoundingClientRect().top)/total,0,1);prog=p;apply();}
+  if(reduce){prog=1;apply();}
+  else{
+    window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{update();ticking=false;});},{passive:true});
+    window.addEventListener('resize',update);
+    update();
+  }
 })();
 
 /* ════ SIGNATURE #2 · Revenue Recovery Map (canvas network) ════ */
