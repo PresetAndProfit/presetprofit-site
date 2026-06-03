@@ -3,649 +3,1387 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Preset &amp; Profit — AI Business Intelligence Audit</title>
+<title>Preset &amp; Profit — Business Intelligence That Shows You Where Money Is Leaking</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<meta name="description" content="Preset & Profit runs a forensic AI audit of your website, offer, funnel, and operations — then hands you a prioritized plan to fix what's quietly costing you the most." />
-<meta property="og:title" content="Preset & Profit — AI Business Intelligence Audit" />
-<meta property="og:description" content="Find the revenue your business is quietly losing. A forensic AI audit of your website, offer, funnel, and operations — with a board-ready action plan." />
+<meta name="description" content="Preset & Profit is a business intelligence platform that scans your website, visibility, reviews, follow-up, and trust signals — then shows exactly where your business is losing money and what to recover first." />
+<meta property="og:title" content="Preset & Profit — Business Intelligence That Shows You Where Money Is Leaking" />
+<meta property="og:description" content="A diagnostic lab for your business. See where revenue is leaking, what it's costing you, and what to fix first." />
 <meta property="og:type" content="website" />
+<meta name="theme-color" content="#070709" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Sora:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  /* ─────────────────────────────  DESIGN SYSTEM  ───────────────────────────── */
-  :root{
-    --black:#08080a; --charcoal:#0c0c0e; --graphite:#141417; --graphite2:#1c1c20;
-    --line:#222226; --line2:#2c2c31;
-    --chrome:#6b6b73; --silver:#9a9aa3; --mute:#4a4a52;
-    --warm-white:#ECEAE3; --cream:#D8CDBA;
-    --gold:#C4A882; --gold-soft:rgba(196,168,130,.10); --gold-line:rgba(196,168,130,.28);
-    --blue:#5B8DEF; --green:#5FBF8F; --amber:#E0A04E; --red:#D9614F;
-    --serif:'Cormorant Garamond',Georgia,serif;
-    --sans:'Sora',system-ui,-apple-system,sans-serif;
-    --maxw:1200px;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-  body{background:var(--black);color:var(--warm-white);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-  ::selection{background:var(--gold);color:#000}
-  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#2a2a2e}
-  a{color:inherit;text-decoration:none}
-  img{max-width:100%;display:block}
+/* ══════════════════════════════  DESIGN SYSTEM  ══════════════════════════════ */
+:root{
+  --black:#070709; --charcoal:#0c0c0e; --graphite:#141417; --graphite2:#1c1c20;
+  --line:#202024; --line2:#2c2c31; --line3:#3a3a41;
+  --chrome:#6b6b73; --silver:#9a9aa3; --mute:#4a4a52;
+  --warm-white:#ECEAE3; --cream:#D8CDBA;
+  --gold:#C4A882; --gold-bright:#E7D2A8; --gold-soft:rgba(196,168,130,.10); --gold-line:rgba(196,168,130,.30); --gold-glow:rgba(196,168,130,.5);
+  --scan:#4DA6FF; --scan-soft:rgba(77,166,255,.12); --scan-line:rgba(77,166,255,.32); --scan-glow:rgba(77,166,255,.55);
+  --green:#5FBF8F; --amber:#E0A04E; --red:#E0654F; --red-glow:rgba(224,101,79,.5);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Sora',system-ui,-apple-system,sans-serif;
+  --maxw:1240px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--black);color:var(--warm-white);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative}
+::selection{background:var(--gold);color:#000}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#2a2a2e}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;color:inherit}
 
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
-  .eyebrow{font-size:10px;letter-spacing:4px;color:var(--chrome);text-transform:uppercase;font-weight:400}
-  .serif{font-family:var(--serif)}
-  em.cream{color:var(--cream);font-style:italic;font-weight:300}
-  h1,h2,h3{font-weight:300;letter-spacing:-.01em}
-  .h2{font-family:var(--serif);font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.12;color:var(--warm-white)}
-  .lead{font-size:clamp(14px,1.6vw,16px);line-height:1.85;color:var(--chrome)}
-  section{position:relative}
-  .section-pad{padding:clamp(5rem,10vw,9rem) 0}
+/* ── living environment (fixed) ── */
+.env{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.env .glow{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform,opacity;animation:breathe 14s ease-in-out infinite}
+.env .g1{width:62vw;height:62vw;left:-16vw;top:-12vw;background:radial-gradient(circle,rgba(196,168,130,.14),transparent 64%)}
+.env .g2{width:54vw;height:54vw;right:-14vw;top:26vh;background:radial-gradient(circle,rgba(77,166,255,.11),transparent 64%);animation-delay:-5s}
+.env .g3{width:50vw;height:50vw;left:6vw;bottom:-20vw;background:radial-gradient(circle,rgba(196,168,130,.09),transparent 64%);animation-delay:-9s}
+@keyframes breathe{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.85;transform:scale(1.12)}}
+.env .mesh{position:absolute;inset:0;opacity:.5;background-image:linear-gradient(rgba(196,168,130,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(196,168,130,.045) 1px,transparent 1px);background-size:64px 64px;-webkit-mask:radial-gradient(ellipse 80% 60% at 50% 30%,#000,transparent 75%);mask:radial-gradient(ellipse 80% 60% at 50% 30%,#000,transparent 75%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-  /* Reveal on scroll */
-  .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-  .reveal.in{opacity:1;transform:none}
-  .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}.d6{transition-delay:.48s}
+/* ── layout ── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 2rem;position:relative;z-index:2}
+.eyebrow{font-size:10px;letter-spacing:4px;color:var(--chrome);text-transform:uppercase;font-weight:400}
+.eyebrow .pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-right:.6rem;vertical-align:middle;box-shadow:0 0 10px var(--gold-glow)}
+.serif{font-family:var(--serif)}
+em.cream{color:var(--cream);font-style:italic;font-weight:300}
+em.gold{color:var(--gold);font-style:italic;font-weight:400;text-shadow:0 0 38px var(--gold-soft)}
+h1,h2,h3{font-weight:300;letter-spacing:-.01em}
+.h2{font-family:var(--serif);font-size:clamp(2.1rem,4.8vw,3.7rem);line-height:1.1;color:var(--warm-white)}
+.lead{font-size:clamp(14px,1.55vw,16.5px);line-height:1.85;color:var(--chrome)}
+section{position:relative;z-index:2}
+.section-pad{padding:clamp(5rem,11vw,9.5rem) 0}
+.divider-top{border-top:1px solid var(--line)}
+.tint{background:linear-gradient(180deg,rgba(10,10,12,.55),rgba(7,7,9,.55))}
 
-  /* Buttons */
-  .btn{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--sans);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border:1px solid transparent}
-  .btn-primary{background:var(--gold);color:#0a0a0a;padding:1rem 2.2rem;font-weight:500}
-  .btn-primary:hover{background:#d4bb96;transform:translateY(-2px);box-shadow:0 12px 40px -12px rgba(196,168,130,.5)}
-  .btn-ghost{background:rgba(196,168,130,.04);border-color:var(--gold-line);color:var(--cream);padding:1rem 2.2rem}
-  .btn-ghost:hover{background:var(--gold-soft);border-color:var(--gold);transform:translateY(-2px)}
-  .btn svg{transition:transform .35s}
-  .btn:hover svg{transform:translateX(4px)}
+/* reveal */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.r-blur{filter:blur(7px)}.r-blur.in{filter:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}.d7{transition-delay:.49s}.d8{transition-delay:.56s}
 
-  /* Nav */
-  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.15rem clamp(1.25rem,4vw,3rem);transition:all .5s cubic-bezier(.16,1,.3,1)}
-  nav.scrolled{background:rgba(8,8,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .brand{font-family:var(--serif);font-size:1.2rem;letter-spacing:.3px;color:var(--warm-white);font-weight:500}
-  .brand b{color:var(--gold);font-weight:500}
-  .nav-links{display:flex;gap:2rem;align-items:center}
-  .nav-links a{font-size:11px;letter-spacing:1.5px;color:var(--chrome);text-transform:uppercase;transition:color .3s}
-  .nav-links a:hover{color:var(--warm-white)}
-  .nav-cta{border:1px solid var(--line2);padding:.55rem 1.3rem;color:var(--cream);font-size:10px;letter-spacing:2px;text-transform:uppercase;transition:all .3s}
-  .nav-cta:hover{border-color:var(--gold);color:var(--gold)}
-  .nav-toggle{display:none;background:none;border:none;color:var(--warm-white);cursor:pointer;font-size:1.3rem}
+/* buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.7rem;font-family:var(--sans);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .35s,border-color .35s,color .35s;border:1px solid transparent;will-change:transform}
+.btn-primary{background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#0a0a0a;padding:1.05rem 2.3rem;box-shadow:0 10px 40px -16px var(--gold-glow)}
+.btn-primary:hover{box-shadow:0 18px 60px -14px var(--gold-glow);transform:translateY(-2px)}
+.btn-ghost{background:rgba(196,168,130,.04);border-color:var(--gold-line);color:var(--cream);padding:1.05rem 2.3rem}
+.btn-ghost:hover{background:var(--gold-soft);border-color:var(--gold);transform:translateY(-2px)}
+.btn svg{transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(5px)}
+.btn-primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-130%);transition:transform .9s var(--ease);pointer-events:none}
+.btn-primary:hover::after{transform:translateX(130%)}
 
-  /* Hero */
-  #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;padding:7rem 1.5rem 4rem}
-  #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
-  .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(196,168,130,.06),transparent 70%);pointer-events:none}
-  .hero-content{position:relative;z-index:2;max-width:880px}
-  #hero h1{font-family:var(--serif);font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.04;letter-spacing:-.02em;margin:1.6rem 0}
-  .hero-sub{font-size:clamp(14px,1.8vw,17px);color:var(--silver);max-width:560px;margin:0 auto;line-height:1.8;font-weight:300}
-  .hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.6rem}
-  .hero-trust{margin-top:2.2rem;font-size:12px;color:var(--mute);letter-spacing:.4px;display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap}
-  .hero-trust span{display:inline-flex;align-items:center;gap:.45rem}
-  .dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.15rem clamp(1.25rem,4vw,3rem);transition:background .5s var(--ease),border-color .5s,padding .5s var(--ease);border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(7,7,9,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding-top:.85rem;padding-bottom:.85rem}
+.brand{font-family:var(--serif);font-size:1.25rem;letter-spacing:.3px;color:var(--warm-white);font-weight:500;display:flex;align-items:center}
+.brand b{color:var(--gold);font-weight:500;margin:0 .12em}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{font-size:11px;letter-spacing:1.5px;color:var(--chrome);text-transform:uppercase;transition:color .3s}
+.nav-links a.t:hover{color:var(--warm-white)}
+.nav-login{color:var(--silver)!important}
+.nav-cta{border:1px solid var(--line2);padding:.6rem 1.35rem;color:var(--cream)!important;font-size:10px;letter-spacing:2px;text-transform:uppercase;transition:all .35s}
+.nav-cta:hover{border-color:var(--gold);color:var(--gold)!important;box-shadow:0 0 24px -8px var(--gold-glow)}
+.nav-toggle{display:none;background:none;border:none;color:var(--warm-white);cursor:pointer;font-size:1.4rem;line-height:1}
 
-  /* Logo / trust strip */
-  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#0a0a0c}
-  .strip .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(1.5rem,5vw,4rem);padding:1.6rem 2rem;flex-wrap:wrap}
-  .strip span{font-size:11px;letter-spacing:2px;color:var(--mute);text-transform:uppercase}
+/* ════════════════  HERO · INTELLIGENCE CHAMBER  ════════════════ */
+#hero{min-height:118vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:8rem 1.5rem 6rem;perspective:1400px}
+#chamberCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.chamber-floor{position:absolute;left:0;right:0;bottom:0;height:46vh;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(196,168,130,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(196,168,130,.07) 1px,transparent 1px);
+  background-size:60px 60px;transform:perspective(420px) rotateX(68deg);transform-origin:bottom center;
+  -webkit-mask:linear-gradient(transparent,#000 60%);mask:linear-gradient(transparent,#000 60%);opacity:.7}
+.chamber-vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 42%,transparent 45%,rgba(7,7,9,.82) 100%)}
+.hero-inner{position:relative;z-index:5;max-width:940px;transform-style:preserve-3d}
+.hero-tag{display:inline-flex;align-items:center;gap:.6rem;border:1px solid var(--line2);border-radius:100px;padding:.45rem 1.05rem .45rem .7rem;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--silver);background:rgba(12,12,14,.45);backdrop-filter:blur(6px)}
+.hero-tag i{width:6px;height:6px;border-radius:50%;background:var(--scan);box-shadow:0 0 10px var(--scan-glow);animation:pulse 2.4s infinite}
+#hero h1{font-family:var(--serif);font-size:clamp(2.6rem,7vw,5.6rem);line-height:1.03;letter-spacing:-.02em;margin:1.7rem 0 0}
+#hero h1 .line{display:block;overflow:hidden}
+#hero h1 .w{display:inline-block;opacity:0;transform:translateY(110%) rotate(3deg);animation:wordup .95s var(--ease) forwards}
+@keyframes wordup{to{opacity:1;transform:none}}
+.hero-sub{font-size:clamp(14px,1.6vw,17px);color:var(--silver);max-width:560px;margin:1.7rem auto 0;line-height:1.85;font-weight:300;opacity:0;animation:fadein 1s var(--ease) 1.1s forwards}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;opacity:0;animation:fadein 1s var(--ease) 1.35s forwards}
+.hero-trust{margin-top:2.2rem;font-size:12px;color:var(--mute);letter-spacing:.4px;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadein 1s var(--ease) 1.55s forwards}
+.hero-trust span{display:inline-flex;align-items:center;gap:.5rem}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+@keyframes fadein{to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  /* Generic grid cards */
-  .grid{display:grid;gap:1.25rem}
-  .g2{grid-template-columns:repeat(2,1fr)}
-  .g3{grid-template-columns:repeat(3,1fr)}
-  .g4{grid-template-columns:repeat(4,1fr)}
-  .card{background:linear-gradient(160deg,#0f0f12,#0b0b0d);border:1px solid var(--line);padding:1.9rem;transition:border-color .4s,transform .4s cubic-bezier(.16,1,.3,1)}
-  .card:hover{border-color:var(--line2);transform:translateY(-4px)}
-  .card .k{font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:1rem}
-  .card h3{font-family:var(--serif);font-size:1.45rem;color:var(--warm-white);margin-bottom:.6rem;line-height:1.2}
-  .card p{font-size:13.5px;color:var(--chrome);line-height:1.75}
+/* floating glass intelligence panels */
+.float-layer{position:absolute;inset:0;z-index:3;pointer-events:none}
+.gpanel{position:absolute;background:rgba(16,16,20,.55);border:1px solid var(--line2);border-radius:10px;padding:.8rem .95rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 24px 60px -28px rgba(0,0,0,.85);opacity:0;will-change:transform;animation:panelin 1.1s var(--ease) forwards}
+.gpanel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
+@keyframes panelin{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1}}
+.gpanel .gp-k{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+.gpanel .gp-k i{width:5px;height:5px;border-radius:50%}
+.gpanel b{font-size:13px;color:var(--warm-white);font-weight:500;display:block;line-height:1.2}
+.gpanel small{font-size:9.5px;color:var(--chrome);letter-spacing:.3px}
+.gp-alert{top:20%;left:3%;animation-delay:1.7s}.gp-alert .gp-k{color:var(--red)}.gp-alert .gp-k i{background:var(--red);box-shadow:0 0 8px var(--red-glow)}
+.gp-opp{top:30%;right:2%;animation-delay:1.95s}.gp-opp .gp-k{color:var(--gold)}.gp-opp .gp-k i{background:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.gp-opp b{font-family:var(--serif);font-size:1.35rem}
+.gp-sig{bottom:20%;left:7%;animation-delay:2.2s}.gp-sig .gp-k{color:var(--scan)}.gp-sig .gp-k i{background:var(--scan);box-shadow:0 0 8px var(--scan-glow)}
+.gp-ring{bottom:16%;right:8%;animation-delay:2.05s;display:flex;align-items:center;gap:.7rem}
+.gp-ring .r{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) 78%,#1d1d22 0)}
+.gp-ring .r::before{content:"";position:absolute;width:32px;height:32px;border-radius:50%;background:#101014}
+.gp-ring .r b{position:relative;font-family:var(--serif);font-size:.95rem}
+.scrollcue{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);z-index:5;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:.7rem;opacity:0;animation:fadein 1s 2.4s forwards}
+.scrollcue .ln{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);position:relative;overflow:hidden}
+.scrollcue .ln::after{content:"";position:absolute;top:-40%;left:0;width:1px;height:40%;background:var(--gold);animation:cued 2.2s ease-in-out infinite}
+@keyframes cued{0%{top:-40%}100%{top:100%}}
 
-  .section-head{max-width:680px;margin-bottom:3.2rem}
-  .section-head .eyebrow{display:block;margin-bottom:1.1rem}
-  .section-head p{margin-top:1.2rem}
+/* marquee */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(10,10,12,.55);overflow:hidden;padding:1.5rem 0}
+.strip-label{text-align:center;font-size:10px;letter-spacing:3px;color:var(--mute);text-transform:uppercase;margin-bottom:1.1rem}
+.marquee{display:flex;gap:3.5rem;width:max-content;animation:scrollx 40s linear infinite}
+.marquee span{font-family:var(--serif);font-size:1.35rem;color:var(--chrome);white-space:nowrap;letter-spacing:.5px}
+.marquee span i{color:var(--gold);font-style:normal;margin:0 .15em}
+.marquee-mask{position:relative;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+@keyframes scrollx{to{transform:translateX(-50%)}}
 
-  /* Problem leak list */
-  .leak{display:flex;gap:1rem;align-items:flex-start;padding:1.3rem 0;border-bottom:1px solid var(--line)}
-  .leak svg{flex-shrink:0;margin-top:3px}
-  .leak h4{font-size:15px;font-weight:400;color:var(--warm-white);margin-bottom:.25rem}
-  .leak p{font-size:13px;color:var(--chrome);line-height:1.6}
+/* section head */
+.section-head{max-width:720px;margin-bottom:3.4rem}
+.section-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.section-head .eyebrow{display:block;margin-bottom:1.2rem}
+.section-head p{margin-top:1.3rem}
 
-  /* Process steps */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;counter-reset:step}
-  .step{position:relative;padding-top:2.2rem}
-  .step::before{counter-increment:step;content:"0" counter(step);font-family:var(--serif);font-size:1rem;color:var(--gold);position:absolute;top:0;left:0;letter-spacing:2px}
-  .step .bar{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:1.2rem}
-  .step h3{font-family:var(--serif);font-size:1.5rem;color:var(--warm-white);margin-bottom:.6rem}
-  .step p{font-size:13px;color:var(--chrome);line-height:1.7}
+/* ════════════════  SIGNATURE #1 · BUSINESS DNA SCAN (scroll-driven)  ════════════════ */
+#dnascan{position:relative;height:340vh;background:linear-gradient(180deg,#070709,#0a0a0d 30%,#0a0a0d 70%,#070709)}
+.dna-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dna-glow{position:absolute;width:70vw;height:70vw;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(77,166,255,.08),transparent 60%);pointer-events:none}
+.dna-wrap{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:2rem;align-items:center}
+.dna-eyebrow{position:absolute;top:8vh;left:50%;transform:translateX(-50%);text-align:center;z-index:3;width:100%}
+.dna-eyebrow h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,3rem);color:var(--warm-white);margin-top:.8rem;line-height:1.1}
+.dna-stages{display:flex;flex-direction:column;gap:.5rem}
+.dna-stage{display:flex;align-items:center;gap:.85rem;padding:.7rem .9rem;border:1px solid var(--line);border-radius:8px;background:rgba(13,13,16,.4);opacity:.4;transition:opacity .5s,border-color .5s,background .5s,transform .5s var(--ease)}
+.dna-stage.active{opacity:1;border-color:var(--scan-line);background:linear-gradient(120deg,rgba(77,166,255,.07),rgba(13,13,16,.4));transform:translateX(6px)}
+.dna-stage.done{opacity:1;border-color:var(--gold-line);background:linear-gradient(120deg,rgba(196,168,130,.06),rgba(13,13,16,.4))}
+.dna-stage .si{width:24px;height:24px;border-radius:6px;border:1px solid var(--line2);display:grid;place-items:center;flex-shrink:0;transition:all .5s}
+.dna-stage.active .si{border-color:var(--scan);box-shadow:0 0 14px -2px var(--scan-glow)}
+.dna-stage.done .si{border-color:var(--gold);background:var(--gold-soft)}
+.dna-stage .sl{font-size:12.5px;color:var(--silver);letter-spacing:.3px}
+.dna-stage.active .sl,.dna-stage.done .sl{color:var(--warm-white)}
+.dna-stage .sx{margin-left:auto;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--scan);opacity:0;transition:opacity .4s}
+.dna-stage.active .sx{opacity:1}
+.dna-stage.done .sx{opacity:1;color:var(--gold)}
+/* central scanner orb */
+.dna-orb{position:relative;width:min(42vh,360px);height:min(42vh,360px);margin:0 auto;display:grid;place-items:center}
+.dna-orb .ring{position:absolute;border-radius:50%;border:1px solid var(--line2)}
+.dna-orb .r1{inset:0;border-color:rgba(196,168,130,.25)}
+.dna-orb .r2{inset:13%;border-color:rgba(77,166,255,.18)}
+.dna-orb .r3{inset:26%;border-color:rgba(196,168,130,.14)}
+.dna-orb .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(77,166,255,.28) 36deg,transparent 60deg);animation:spin 3.4s linear infinite}
+.dna-orb .core{position:relative;z-index:2;text-align:center}
+.dna-orb .pct{font-family:var(--serif);font-size:clamp(2.6rem,6vw,3.8rem);color:var(--warm-white);line-height:1}
+.dna-orb .pl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--scan);margin-top:.4rem}
+.dna-orb .dotring i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);top:50%;left:50%;margin:-3px;box-shadow:0 0 10px var(--gold-glow)}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* right: live scores + surfacing cards */
+.dna-out{display:flex;flex-direction:column;gap:.7rem}
+.dna-score{border:1px solid var(--line);border-radius:8px;padding:.75rem .9rem;background:rgba(13,13,16,.5);opacity:0;transform:translateX(14px);transition:opacity .5s,transform .5s var(--ease)}
+.dna-score.show{opacity:1;transform:none}
+.dna-score .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem}
+.dna-score .nm{font-size:11px;color:var(--silver);letter-spacing:.3px}
+.dna-score .vv{font-family:var(--serif);font-size:1.15rem}
+.dna-score .track{height:4px;border-radius:3px;background:#1a1a1e;overflow:hidden}
+.dna-score .bar{height:100%;width:0;border-radius:3px;transition:width 1s var(--ease)}
+.dna-hint{position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);z-index:3}
 
-  /* Report mockup */
-  .report{background:linear-gradient(165deg,#101013,#0a0a0c);border:1px solid var(--line2);border-radius:6px;overflow:hidden;box-shadow:0 40px 120px -40px rgba(0,0,0,.8)}
-  .report-bar{display:flex;align-items:center;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid var(--line);background:#0c0c0e}
-  .report-bar .tl{width:9px;height:9px;border-radius:50%;background:#26262b}
-  .report-bar .title{margin-left:.8rem;font-size:11px;letter-spacing:2px;color:var(--chrome);text-transform:uppercase}
-  .report-bar .live{margin-left:auto;font-size:10px;letter-spacing:1.5px;color:var(--green);display:flex;align-items:center;gap:.4rem}
-  .report-bar .live i{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .report-body{padding:1.6rem}
-  .scores{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-  .score{text-align:center;padding:1.1rem .6rem;background:#0d0d10;border:1px solid var(--line);border-radius:4px}
-  .gauge{--v:0;--c:var(--gold);width:64px;height:64px;border-radius:50%;margin:0 auto .7rem;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--v)*1%),#1a1a1e 0);position:relative}
-  .gauge::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#0d0d10}
-  .gauge b{position:relative;font-family:var(--serif);font-size:1.2rem;color:var(--warm-white);font-weight:500}
-  .score .lbl{font-size:9.5px;letter-spacing:1.2px;color:var(--chrome);text-transform:uppercase;line-height:1.4}
-  .report-summary{background:#0d0d10;border:1px solid var(--line);border-radius:4px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
-  .report-summary .tag{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
-  .report-summary p{font-size:13px;color:var(--silver);line-height:1.7;margin-top:.5rem}
-  .fix{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--line);font-size:12.5px}
-  .fix:last-child{border-bottom:none}
-  .fix .pri{font-size:9px;letter-spacing:1px;padding:.2rem .5rem;border-radius:3px;text-transform:uppercase;flex-shrink:0;font-weight:500}
-  .pri.hi{background:rgba(217,97,79,.14);color:var(--red)}
-  .pri.md{background:rgba(224,160,78,.14);color:var(--amber)}
-  .pri.lo{background:rgba(95,191,143,.14);color:var(--green)}
-  .fix .txt{color:var(--silver);flex:1}
-  .fix .impact{color:var(--chrome);font-size:11px;white-space:nowrap}
+/* ════════════════  COMPARISON  ════════════════ */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
+.vs-col{padding:2.4rem 2.2rem;border:1px solid var(--line);position:relative}
+.vs-col.generic{background:linear-gradient(165deg,#0d0d0f,#0a0a0c);border-right:none}
+.vs-col.intel{background:linear-gradient(165deg,#13110d,#0b0a08);border-left:none;border-color:var(--gold-line);box-shadow:0 40px 120px -50px rgba(196,168,130,.25)}
+.vs-mid{display:grid;place-items:center;width:64px;position:relative;z-index:3}
+.vs-mid .o{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--black);border:1px solid var(--line2);font-family:var(--serif);font-size:.95rem;color:var(--silver);font-style:italic}
+.vs-col .k{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:.5rem}
+.vs-col.generic .k{color:var(--chrome)}.vs-col.intel .k{color:var(--gold)}
+.vs-col h3{font-family:var(--serif);font-size:1.7rem;color:var(--warm-white);margin-bottom:.4rem;font-weight:400}
+.vs-col .tagline{font-size:12px;color:var(--chrome);margin-bottom:1.7rem;line-height:1.6}
+.vs-list{list-style:none;display:flex;flex-direction:column;gap:.95rem}
+.vs-list li{display:flex;gap:.75rem;align-items:flex-start;font-size:13.5px;line-height:1.55}
+.vs-list .gx{flex-shrink:0;margin-top:2px}
+.vs-col.generic .vs-list li{color:var(--mute)}
+.vs-col.intel .vs-list li{color:var(--silver)}
+.vs-col.intel .vs-list li b{color:var(--warm-white);font-weight:400}
 
-  /* Pricing */
-  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;align-items:start}
-  .tier{background:linear-gradient(165deg,#0f0f12,#0a0a0c);border:1px solid var(--line);padding:2rem 1.8rem;display:flex;flex-direction:column}
-  .tier.featured{border-color:var(--gold-line);background:linear-gradient(165deg,#13110d,#0b0a08)}
-  .tier .badge{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem;min-height:14px}
-  .tier h3{font-family:var(--serif);font-size:1.9rem;color:var(--warm-white);margin-bottom:.3rem}
-  .tier .who{font-size:12px;color:var(--chrome);margin-bottom:1.5rem;line-height:1.5}
-  .depth{padding:1rem 0;border-top:1px solid var(--line)}
-  .depth .row{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
-  .depth .name{font-size:13px;color:var(--warm-white);font-weight:400}
-  .depth .price{font-family:var(--serif);font-size:1.25rem;color:var(--gold);white-space:nowrap}
-  .depth .price small{font-size:10px;color:var(--chrome);font-family:var(--sans)}
-  .depth .desc{font-size:11.5px;color:var(--chrome);margin-top:.35rem;line-height:1.5}
-  .tier .btn{justify-content:center;margin-top:1.6rem;width:100%}
+/* ════════════════  SIGNATURE #2 · REVENUE RECOVERY MAP  ════════════════ */
+#recovery{overflow:hidden}
+.map-stage{position:relative;border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:radial-gradient(ellipse 70% 70% at 50% 45%,#0d0d12,#08080a);box-shadow:0 50px 140px -60px rgba(0,0,0,.85)}
+.map-stage canvas{display:block;width:100%;height:560px}
+.map-legend{position:absolute;bottom:1.1rem;left:1.2rem;display:flex;gap:1.3rem;flex-wrap:wrap;z-index:3}
+.map-legend span{display:inline-flex;align-items:center;gap:.5rem;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--silver)}
+.map-legend i{width:8px;height:8px;border-radius:50%}
+.map-legend .lr{background:var(--red);box-shadow:0 0 10px var(--red-glow)}
+.map-legend .lg{background:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+.map-legend .lb{background:var(--scan);box-shadow:0 0 10px var(--scan-glow)}
+.map-tip{position:absolute;top:1.1rem;right:1.2rem;z-index:3;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:100px;padding:.4rem .8rem;background:rgba(10,10,12,.5);backdrop-filter:blur(6px)}
 
-  /* Trust */
-  .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-  .trust-item{padding:1.6rem;border:1px solid var(--line);background:#0b0b0d}
-  .trust-item .ic{width:34px;height:34px;border:1px solid var(--gold-line);border-radius:50%;display:grid;place-items:center;margin-bottom:1rem}
-  .trust-item h4{font-size:14px;font-weight:400;color:var(--warm-white);margin-bottom:.5rem}
-  .trust-item p{font-size:12.5px;color:var(--chrome);line-height:1.7}
+/* ════════════════  SIGNATURE #3 · INDUSTRY INTELLIGENCE ENGINE  ════════════════ */
+.engine{display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+.eng-tabs{display:flex;flex-direction:column;gap:.55rem}
+.eng-tab{display:flex;align-items:center;gap:1rem;padding:1.05rem 1.25rem;border:1px solid var(--line);background:rgba(13,13,16,.45);cursor:pointer;transition:border-color .4s,background .4s,transform .4s var(--ease);text-align:left;border-radius:9px;position:relative;overflow:hidden}
+.eng-tab:hover{border-color:var(--line2);transform:translateX(4px)}
+.eng-tab.active{border-color:var(--gold-line);background:linear-gradient(120deg,rgba(196,168,130,.08),rgba(13,13,16,.45))}
+.eng-tab .prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold),var(--scan))}
+.eng-tab.active .prog{animation:engprog 7s linear forwards}
+@keyframes engprog{to{width:100%}}
+.eng-tab .em{font-size:1.25rem;width:42px;height:42px;display:grid;place-items:center;border-radius:9px;background:rgba(196,168,130,.06);border:1px solid var(--line);flex-shrink:0}
+.eng-tab.active .em{border-color:var(--gold-line);background:var(--gold-soft)}
+.eng-tab .nm{font-size:14px;color:var(--silver);font-weight:400}
+.eng-tab.active .nm{color:var(--warm-white)}
+.eng-tab .nm small{display:block;font-size:10.5px;color:var(--mute);margin-top:2px}
+.eng-panel{border:1px solid var(--line2);border-radius:12px;background:linear-gradient(165deg,#101014,#0a0a0c);padding:2.2rem;min-height:420px;position:relative;overflow:hidden;box-shadow:0 40px 120px -55px rgba(0,0,0,.7)}
+.eng-panel::after{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line),transparent)}
+.eng-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.3rem;flex-wrap:wrap}
+.eng-head{display:flex;align-items:center;gap:1rem}
+.eng-head .big{font-size:2rem;line-height:1}
+.eng-head h3{font-family:var(--serif);font-size:1.9rem;color:var(--warm-white);font-weight:400}
+.eng-pri{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-line);border-radius:100px;padding:.35rem .7rem}
+.eng-panel .desc{font-size:13.5px;color:var(--chrome);line-height:1.7;margin:.8rem 0 1.7rem;max-width:560px}
+.eng-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.metric{padding:.95rem 1rem;border:1px solid var(--line);border-radius:8px;background:rgba(13,13,16,.55)}
+.metric .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.metric .mname{font-size:12px;color:var(--warm-white)}
+.metric .w{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:.15rem .45rem;border-radius:3px;font-weight:500}
+.w.crit{background:rgba(196,168,130,.16);color:var(--gold)}.w.high{background:rgba(77,166,255,.14);color:var(--scan)}.w.base{background:rgba(154,154,163,.1);color:var(--silver)}
+.metric .track{height:4px;border-radius:3px;background:#1a1a1e;overflow:hidden}
+.metric .bar{height:100%;border-radius:3px;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width 1.1s var(--ease)}
+.metric.s .bar{background:linear-gradient(90deg,var(--scan),#8cc6ff)}
+.eng-note{margin-top:1.6rem;font-size:12px;color:var(--silver);line-height:1.7;border-left:1px solid var(--gold-line);padding-left:1rem}
+.eng-fade{animation:engfade .55s var(--ease)}
+@keyframes engfade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  /* Use cases */
-  .uc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-  .uc-card{padding:1.7rem;border:1px solid var(--line);background:linear-gradient(160deg,#0e0e11,#0a0a0c);transition:border-color .4s,transform .4s}
-  .uc-card:hover{border-color:var(--gold-line);transform:translateY(-4px)}
-  .uc-card .k{font-family:var(--serif);font-size:1.35rem;color:var(--warm-white);margin-bottom:.6rem}
-  .uc-card p{font-size:13px;color:var(--chrome);line-height:1.7}
+/* ════════════════  SIGNATURE #4 · OPPORTUNITY ENGINE  ════════════════ */
+#opportunity{overflow:hidden;text-align:center}
+.opp-stage{position:relative;border:1px solid var(--line2);border-radius:14px;background:radial-gradient(ellipse 60% 80% at 50% 30%,rgba(196,168,130,.08),#08080a);padding:clamp(2.5rem,6vw,4.5rem) 2rem;overflow:hidden}
+.opp-stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(196,168,130,.05) 1px,transparent 1px);background-size:100% 40px;-webkit-mask:radial-gradient(ellipse 60% 60% at 50% 40%,#000,transparent 75%);mask:radial-gradient(ellipse 60% 60% at 50% 40%,#000,transparent 75%);opacity:.6}
+.opp-stage>*{position:relative;z-index:2}
+.opp-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--chrome)}
+.opp-num{font-family:var(--serif);font-size:clamp(3.4rem,11vw,8rem);line-height:1;color:var(--gold);letter-spacing:-.02em;margin:1rem 0 .4rem;text-shadow:0 0 70px rgba(196,168,130,.25)}
+.opp-sub{font-size:13px;color:var(--silver);letter-spacing:.3px}
+.opp-meta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.4rem}
+.opp-chip{border:1px solid var(--line2);border-radius:10px;padding:1rem 1.3rem;min-width:150px;background:rgba(13,13,16,.5);text-align:left}
+.opp-chip .ck{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);margin-bottom:.5rem}
+.opp-chip .cv{font-family:var(--serif);font-size:1.5rem;color:var(--warm-white)}
+.opp-chip .cv small{font-family:var(--sans);font-size:10px;color:var(--chrome);letter-spacing:.5px}
+.opp-recs{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:2rem}
+.opp-rec{font-size:11px;letter-spacing:.3px;color:var(--silver);border:1px solid var(--line2);border-radius:100px;padding:.45rem .9rem;background:rgba(13,13,16,.4);opacity:0;transform:translateY(8px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.opp-rec.show{opacity:1;transform:none}
+.opp-rec b{color:var(--gold);font-weight:500}
+.opp-dots{display:flex;gap:.5rem;justify-content:center;margin-top:2.6rem}
+.opp-dots button{width:8px;height:8px;border-radius:50%;border:none;background:#2a2a2e;cursor:pointer;transition:all .35s;padding:0}
+.opp-dots button.on{background:var(--gold);width:22px;border-radius:4px}
 
-  /* Audit form */
-  #audit{background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(196,168,130,.05),transparent 70%),#070709}
-  .audit-box{max-width:620px;margin:0 auto;text-align:center}
-  .audit-form{display:flex;flex-direction:column;gap:.8rem;margin-top:2rem;text-align:left}
-  .audit-form .field{display:flex;flex-direction:column;gap:.4rem}
-  .audit-form label{font-size:10px;letter-spacing:1.5px;color:var(--chrome);text-transform:uppercase}
-  .audit-form input{background:#0d0d10;border:1px solid var(--line2);color:var(--warm-white);font-family:var(--sans);font-size:14px;padding:.95rem 1rem;border-radius:3px;transition:border-color .3s}
-  .audit-form input:focus{outline:none;border-color:var(--gold)}
-  .audit-form input::placeholder{color:var(--mute)}
-  .audit-form button{justify-content:center;margin-top:.4rem}
-  .form-note{font-size:11.5px;color:var(--mute);margin-top:1rem;line-height:1.6}
-  .form-success{display:none;padding:1.6rem;border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:4px;margin-top:1.5rem}
-  .form-success.show{display:block}
-  .form-success h4{font-family:var(--serif);font-size:1.4rem;color:var(--cream);margin-bottom:.5rem}
-  .form-success p{font-size:13px;color:var(--silver);line-height:1.7}
+/* ════════════════  LEAK SCANNER  ════════════════ */
+.scanner{position:relative;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:linear-gradient(165deg,#0d0d10,#090909)}
+.scanner-head{display:flex;align-items:center;gap:.6rem;padding:1rem 1.4rem;border-bottom:1px solid var(--line);background:rgba(10,10,12,.55)}
+.scanner-head .tl{width:9px;height:9px;border-radius:50%;background:#26262b}
+.scanner-head .t{margin-left:.7rem;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chrome)}
+.scanner-head .st{margin-left:auto;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--scan);display:flex;align-items:center;gap:.4rem}
+.scanner-head .st i{width:6px;height:6px;border-radius:50%;background:var(--scan);box-shadow:0 0 8px var(--scan-glow);animation:pulse 1.6s infinite}
+.scanner-body{position:relative}
+.scanline{position:absolute;left:0;right:0;top:0;height:140px;pointer-events:none;z-index:4;background:linear-gradient(180deg,transparent,var(--scan-soft) 55%,transparent);opacity:.5;animation:scanfull 5s var(--ease) infinite}
+@keyframes scanfull{0%{transform:translateY(-140px)}100%{transform:translateY(760px)}}
+.leak-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:1.05rem 1.6rem;border-bottom:1px solid var(--line);transition:background .4s}
+.leak-row:last-child{border-bottom:none}
+.leak-row:hover{background:rgba(196,168,130,.03)}
+.leak-row .lname{display:flex;align-items:center;gap:.85rem;min-width:0}
+.leak-row .ic{width:34px;height:34px;border-radius:7px;display:grid;place-items:center;flex-shrink:0;border:1px solid var(--line2)}
+.leak-row .lt b{display:block;font-size:14px;font-weight:400;color:var(--warm-white)}
+.leak-row .lt span{font-size:11px;color:var(--mute);letter-spacing:.3px}
+.leak-row .meta-fix{font-size:11px;color:var(--silver);letter-spacing:.3px;white-space:nowrap;text-align:right}
+.leak-row .meta-fix small{display:block;font-size:9px;color:var(--mute);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.impact-pill{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;padding:.3rem .6rem;border-radius:4px;white-space:nowrap;text-align:center;min-width:78px}
+.impact-pill.hi{background:rgba(224,101,79,.13);color:var(--red);border:1px solid rgba(224,101,79,.25)}
+.impact-pill.md{background:rgba(224,160,78,.12);color:var(--amber);border:1px solid rgba(224,160,78,.22)}
+.impact-pill.lo{background:rgba(95,191,143,.12);color:var(--green);border:1px solid rgba(95,191,143,.22)}
+.scanner-foot{padding:1.1rem 1.6rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:rgba(10,10,12,.45);border-top:1px solid var(--line)}
+.scanner-foot .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome)}
+.scanner-foot .val{font-family:var(--serif);font-size:1.5rem;color:var(--gold)}
 
-  /* Final CTA */
-  #final{text-align:center;overflow:hidden}
-  #final h2{font-family:var(--serif);font-size:clamp(2.4rem,6vw,5rem);line-height:1.06;letter-spacing:-.02em;max-width:760px;margin:1.5rem auto}
-  #final .lead{max-width:460px;margin:0 auto}
+/* ════════════════  THE WORK WE BUILD  ════════════════ */
+.work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.work-card{position:relative;border:1px solid var(--line);border-radius:11px;background:linear-gradient(165deg,#0f0f12,#0a0a0c);padding:1.6rem 1.4rem;overflow:hidden;transition:border-color .45s,transform .45s var(--ease)}
+.work-card:hover{border-color:var(--gold-line);transform:translateY(-5px)}
+.work-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,var(--gold-soft),transparent 55%);opacity:0;transition:opacity .45s}
+.work-card:hover::before{opacity:1}
+.work-card .wi{position:relative;width:42px;height:42px;border-radius:10px;border:1px solid var(--line2);display:grid;place-items:center;margin-bottom:1.1rem;color:var(--gold);background:rgba(196,168,130,.05);transition:border-color .45s,box-shadow .45s}
+.work-card:hover .wi{border-color:var(--gold-line);box-shadow:0 0 22px -6px var(--gold-glow)}
+.work-card h4{position:relative;font-size:14px;font-weight:400;color:var(--warm-white);margin-bottom:.45rem;letter-spacing:.2px}
+.work-card p{position:relative;font-size:11.5px;color:var(--chrome);line-height:1.65}
+.work-card .tagn{position:absolute;top:1.2rem;right:1.2rem;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);font-family:var(--serif);font-style:italic}
+.work-foot{margin-top:2rem;text-align:center;font-size:12px;color:var(--silver);letter-spacing:.3px}
+.work-foot a{color:var(--cream);border-bottom:1px solid var(--gold-line);padding-bottom:1px}
 
-  /* Footer */
-  footer{border-top:1px solid var(--line);padding:3rem 0 2.5rem;background:#060608}
-  .foot{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
-  .foot .brand{font-size:1.05rem;opacity:.6}
-  .foot-links{display:flex;gap:1.6rem;flex-wrap:wrap}
-  .foot-links a{font-size:11px;letter-spacing:1.5px;color:var(--mute);text-transform:uppercase;transition:color .3s}
-  .foot-links a:hover{color:var(--silver)}
-  .foot-legal{font-size:10px;letter-spacing:1.5px;color:#2c2c31;text-transform:uppercase}
+/* ════════════════  TRANSFORMATIONS / CASE STUDIES  ════════════════ */
+.cases{display:flex;flex-direction:column;gap:1.3rem}
+.case{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:linear-gradient(165deg,#0d0d10,#08080a);box-shadow:0 40px 120px -60px rgba(0,0,0,.8);transition:border-color .45s}
+.case:hover{border-color:var(--gold-line)}
+.case-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 1.6rem;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.case-head .ch-l{display:flex;align-items:center;gap:1rem}
+.case-head .em{font-size:1.5rem;width:46px;height:46px;display:grid;place-items:center;border-radius:10px;background:rgba(196,168,130,.06);border:1px solid var(--line)}
+.case-head h3{font-family:var(--serif);font-size:1.6rem;color:var(--warm-white);font-weight:400;line-height:1.1}
+.case-head h3 small{display:block;font-family:var(--sans);font-size:11px;color:var(--chrome);letter-spacing:.3px;margin-top:3px}
+.case-head .tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:100px;padding:.4rem .8rem;white-space:nowrap}
+.case-body{display:grid;grid-template-columns:1fr 64px 1fr}
+.case-side{padding:1.7rem 1.6rem}
+.case-side.before{background:rgba(224,101,79,.035)}
+.case-side.after{background:rgba(196,168,130,.04)}
+.case-side .sk{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+.case-side .sk i{width:6px;height:6px;border-radius:50%}
+.case-side.before .sk{color:var(--red)}.case-side.before .sk i{background:var(--red);box-shadow:0 0 8px var(--red-glow)}
+.case-side.after .sk{color:var(--gold)}.case-side.after .sk i{background:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.case-row{display:flex;gap:.7rem;align-items:flex-start;font-size:13px;line-height:1.5;margin-bottom:.9rem}
+.case-row:last-child{margin-bottom:0}
+.case-row svg{flex-shrink:0;margin-top:3px}
+.case-side.before .case-row{color:var(--mute)}
+.case-side.after .case-row{color:var(--silver)}
+.case-side.after .case-row b{color:var(--warm-white);font-weight:400}
+.case-arrow{display:grid;place-items:center;color:var(--chrome);background:linear-gradient(90deg,rgba(224,101,79,.05),rgba(196,168,130,.06))}
+.case-foot{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;padding:1.1rem 1.6rem;border-top:1px solid var(--line);background:rgba(10,10,12,.45)}
+.case-foot .out{display:flex;align-items:center;gap:.55rem;font-size:12px;color:var(--cream)}
+.case-foot .out b{font-family:var(--serif);color:var(--gold);font-size:1.15rem;font-weight:500}
+.case-foot .note{margin-left:auto;font-size:10px;letter-spacing:.5px;color:var(--mute);font-style:italic}
 
-  /* Responsive */
-  @media(max-width:900px){
-    .g4,.scores,.steps{grid-template-columns:repeat(2,1fr)}
-    .g3,.tiers,.trust-grid,.uc{grid-template-columns:1fr}
-    .split{grid-template-columns:1fr!important}
-    .nav-links{display:none}
-    .nav-links.open{display:flex;position:absolute;top:100%;right:1rem;flex-direction:column;background:rgba(10,10,12,.97);backdrop-filter:blur(14px);border:1px solid var(--line);padding:1.4rem 1.8rem;gap:1.2rem;align-items:flex-start}
-    .nav-toggle{display:block}
-  }
-  @media(max-width:560px){
-    .g2{grid-template-columns:1fr}
-    .scores{grid-template-columns:repeat(2,1fr)}
-    .steps{grid-template-columns:1fr}
-    .hero-ctas .btn{width:100%;justify-content:center}
-  }
-  @media(prefers-reduced-motion:reduce){
-    .reveal{opacity:1;transform:none;transition:none}
-    *{animation:none!important}
-  }
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+/* ════════════════  PROCESS TIMELINE  ════════════════ */
+.timeline{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;margin-top:1rem}
+.timeline::before{content:"";position:absolute;top:18px;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line) 12%,var(--gold-line) 88%,transparent);z-index:0}
+.tl-line{position:absolute;top:18px;left:5%;height:1px;background:linear-gradient(90deg,var(--gold),var(--scan));box-shadow:0 0 12px var(--gold-glow);z-index:1;width:0;transition:width 2.4s var(--ease)}
+.node{position:relative;z-index:2;text-align:center}
+.node .ring{width:38px;height:38px;border-radius:50%;margin:0 auto 1.3rem;display:grid;place-items:center;background:var(--black);border:1px solid var(--line2);font-family:var(--serif);font-size:.9rem;color:var(--silver);transition:border-color .5s,color .5s,box-shadow .5s}
+.node.lit .ring{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px rgba(196,168,130,.08),0 0 22px -4px var(--gold-glow)}
+.node h4{font-size:13.5px;font-weight:400;color:var(--warm-white);margin-bottom:.5rem;letter-spacing:.2px}
+.node p{font-size:11.5px;color:var(--chrome);line-height:1.6;padding:0 .3rem}
+
+/* ════════════════  PLATFORM SHOWCASE  ════════════════ */
+.showcase{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(120px,auto);gap:1.1rem}
+.sc{border:1px solid var(--line);border-radius:10px;background:linear-gradient(165deg,#0f0f12,#0a0a0c);padding:1.5rem;position:relative;overflow:hidden;transition:border-color .45s,transform .45s var(--ease)}
+.sc:hover{border-color:var(--gold-line);transform:translateY(-4px)}
+.sc::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line),transparent);opacity:0;transition:opacity .45s}
+.sc:hover::before{opacity:1}
+.sc .k{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+.sc h3{font-family:var(--serif);font-size:1.35rem;color:var(--warm-white);font-weight:400;margin-bottom:.5rem;line-height:1.2}
+.sc p{font-size:12.5px;color:var(--chrome);line-height:1.7}
+.sc-wide{grid-column:span 4}.sc-half{grid-column:span 3}.sc-third{grid-column:span 2}
+.sc-feature{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;gap:0;padding:0;overflow:hidden}
+.scf-copy{padding:2.4rem}.scf-copy .k{margin-bottom:1rem}.scf-copy h3{font-size:2rem;margin-bottom:.8rem}.scf-copy p{font-size:13.5px;line-height:1.8}
+.scf-vis{border-left:1px solid var(--line);background:rgba(8,8,10,.5);padding:1.8rem;display:flex;flex-direction:column;justify-content:center;gap:.7rem}
+.recover-row{display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border:1px solid var(--line);border-radius:7px;background:rgba(13,13,16,.55)}
+.recover-row .rl{flex:1;font-size:12px;color:var(--silver)}
+.recover-row .rv{font-family:var(--serif);font-size:1.1rem;color:var(--gold)}
+.recover-row .rt{height:3px;flex:1;border-radius:2px;background:#1a1a1e;overflow:hidden;max-width:80px}
+.recover-row .rt i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright))}
+.dna{display:flex;gap:3px;align-items:flex-end;height:64px;margin-top:.5rem}
+.dna i{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(180deg,var(--gold),rgba(196,168,130,.2));opacity:.85;animation:dnab 3s ease-in-out infinite}
+.dna i:nth-child(even){background:linear-gradient(180deg,var(--scan),rgba(77,166,255,.2))}
+@keyframes dnab{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+
+/* positioning */
+#position{text-align:center;overflow:hidden}
+#position .h2{max-width:900px;margin:1.4rem auto 0}
+#position .lead{max-width:620px;margin:1.6rem auto 0}
+.pos-line{width:1px;height:60px;background:linear-gradient(180deg,var(--gold-line),transparent);margin:2.4rem auto 0}
+
+/* pricing */
+.tiers4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;align-items:stretch}
+.tier{background:linear-gradient(165deg,#0f0f12,#0a0a0c);border:1px solid var(--line);border-radius:10px;padding:1.9rem 1.6rem;display:flex;flex-direction:column;transition:border-color .45s,transform .45s var(--ease)}
+.tier:hover{border-color:var(--line2);transform:translateY(-5px)}
+.tier.featured{border-color:var(--gold-line);background:linear-gradient(165deg,#14110c,#0b0a08);box-shadow:0 40px 120px -50px rgba(196,168,130,.3)}
+.tier .badge{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:.7rem;min-height:13px}
+.tier h3{font-family:var(--serif);font-size:1.5rem;color:var(--warm-white);margin-bottom:.4rem;font-weight:400;line-height:1.15}
+.tier .who{font-size:11.5px;color:var(--chrome);margin-bottom:1.3rem;line-height:1.6;min-height:54px}
+.tier .pr{font-family:var(--serif);font-size:2.1rem;color:var(--gold);line-height:1;margin-bottom:.2rem}
+.tier .pr small{font-family:var(--sans);font-size:11px;color:var(--chrome);letter-spacing:.5px}
+.tier .prnote{font-size:10.5px;color:var(--mute);margin-bottom:1.3rem;letter-spacing:.3px}
+.tier ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.6rem;flex:1}
+.tier ul li{display:flex;gap:.6rem;font-size:12.5px;color:var(--silver);line-height:1.5}
+.tier ul li svg{flex-shrink:0;margin-top:3px}
+.tier .btn{justify-content:center;width:100%;font-size:10px;padding:.9rem 1rem}
+
+/* founder */
+.founder{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.founder-photo{position:relative}
+.founder-photo img{border-radius:10px;border:1px solid var(--line2);width:100%;filter:grayscale(.15) contrast(1.02);box-shadow:0 40px 120px -50px rgba(0,0,0,.8)}
+.founder-photo .frame{position:absolute;inset:-1px;border-radius:11px;border:1px solid var(--gold-line);pointer-events:none;mix-blend-mode:screen}
+.founder-photo .tagchip{position:absolute;bottom:1rem;left:1rem;right:1rem;background:rgba(10,10,12,.78);backdrop-filter:blur(10px);border:1px solid var(--line2);border-radius:8px;padding:.7rem .9rem;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--silver)}
+.founder-photo .tagchip b{color:var(--gold);font-weight:500}
+.founder blockquote{font-family:var(--serif);font-size:clamp(1.3rem,2.4vw,1.85rem);line-height:1.4;color:var(--cream);font-weight:300;font-style:italic;margin:1.4rem 0 1.6rem}
+.founder .roles{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.4rem}
+.founder .roles span{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);border:1px solid var(--line2);border-radius:100px;padding:.35rem .75rem}
+.founder .sig{display:flex;align-items:center;gap:1rem;margin-top:1.8rem}
+.founder .sig .mono{width:46px;height:46px;border-radius:50%;border:1px solid var(--gold-line);display:grid;place-items:center;font-family:var(--serif);color:var(--gold);font-size:1.05rem}
+.founder .sig .who b{display:block;font-size:14px;color:var(--warm-white);font-weight:400}
+.founder .sig .who span{font-size:11px;color:var(--chrome);letter-spacing:.5px}
+
+/* final */
+#final{text-align:center;overflow:hidden;background:radial-gradient(ellipse 60% 70% at 50% 40%,rgba(196,168,130,.07),transparent 70%),#060608}
+#final h2{font-family:var(--serif);font-size:clamp(2.4rem,6.2vw,5.2rem);line-height:1.05;letter-spacing:-.02em;max-width:820px;margin:1.5rem auto}
+#final .lead{max-width:480px;margin:0 auto}
+#final .hero-ctas{justify-content:center;animation:none;opacity:1}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:3.4rem 0 2.6rem;background:#060608;position:relative;z-index:2}
+.foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem}
+.foot-col .brand{margin-bottom:1rem}
+.foot-col p{font-size:12.5px;color:var(--mute);line-height:1.7;max-width:260px}
+.foot-col h5{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chrome);margin-bottom:1.1rem}
+.foot-col a{display:block;font-size:13px;color:var(--silver);margin-bottom:.7rem;transition:color .3s}
+.foot-col a:hover{color:var(--warm-white)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.8rem}
+.foot-bottom .links{display:flex;gap:1.4rem;flex-wrap:wrap}
+.foot-bottom .links a{font-size:10px;letter-spacing:1.5px;color:var(--mute);text-transform:uppercase;transition:color .3s}
+.foot-bottom .links a:hover{color:var(--silver)}
+.foot-legal{font-size:10px;letter-spacing:1.5px;color:#34343a;text-transform:uppercase}
+
+/* ════════════════  THE BUSINESS OPERATING SYSTEM  ════════════════ */
+#os{overflow:hidden}
+.os{position:relative;max-width:900px;margin:0 auto}
+.os-spine{position:absolute;left:26px;top:18px;bottom:18px;width:2px;background:var(--line2);border-radius:2px;overflow:hidden}
+.os-spine .fill{position:absolute;top:0;left:0;width:100%;height:0;background:linear-gradient(180deg,var(--gold),var(--scan));box-shadow:0 0 16px var(--gold-glow);transition:height 1s var(--ease)}
+.os-track{position:relative;display:flex;flex-direction:column;gap:1.1rem}
+.os-stage{position:relative;display:grid;grid-template-columns:54px 1fr;gap:1.2rem;opacity:.4;transform:translateY(18px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.os-stage.lit{opacity:1;transform:none}
+.os-dot{position:relative;z-index:2;width:54px;display:flex;justify-content:center}
+.os-dot .d{width:36px;height:36px;border-radius:50%;background:var(--black);border:1px solid var(--line2);display:grid;place-items:center;color:var(--silver);margin-top:6px;transition:border-color .5s,color .5s,box-shadow .5s}
+.os-stage.lit .os-dot .d{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px rgba(196,168,130,.08),0 0 24px -4px var(--gold-glow)}
+.os-card{border:1px solid var(--line);border-radius:12px;background:linear-gradient(165deg,#0f0f12,#0a0a0c);padding:1.35rem 1.5rem;display:flex;align-items:center;gap:1.3rem;flex-wrap:wrap;transition:border-color .5s,transform .5s var(--ease)}
+.os-stage.lit .os-card{border-color:var(--gold-line)}
+.os-card .oc-main{flex:1;min-width:220px}
+.os-card .oc-k{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem}
+.os-card h3{font-family:var(--serif);font-size:1.45rem;color:var(--warm-white);font-weight:400;margin-bottom:.35rem;line-height:1.15}
+.os-card p{font-size:12.5px;color:var(--chrome);line-height:1.6}
+.os-install{font-size:10.5px;letter-spacing:.3px;color:var(--cream);border:1px solid var(--line2);border-radius:9px;padding:.65rem .85rem;background:rgba(13,13,16,.55);white-space:nowrap;align-self:center}
+.os-install b{display:block;font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;font-weight:500}
+.os-foot{max-width:780px;margin:3rem auto 0;text-align:center}
+.os-foot h4{font-family:var(--serif);font-size:clamp(1.4rem,2.6vw,2rem);color:var(--cream);font-weight:400;font-style:italic}
+.os-eco{margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center}
+.os-eco span{font-size:11px;letter-spacing:.3px;color:var(--silver);border:1px solid var(--line2);border-radius:100px;padding:.45rem .9rem;background:rgba(13,13,16,.4);transition:border-color .4s,color .4s}
+.os-eco span:hover{border-color:var(--gold-line);color:var(--warm-white)}
+
+/* ════════════════  THE IMPLEMENTATION ENGINE  ════════════════ */
+.impl{display:flex;flex-direction:column;gap:.85rem;max-width:860px;margin:0 auto}
+.impl-row{display:grid;grid-template-columns:1fr 60px 1fr;align-items:stretch;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:linear-gradient(165deg,#0d0d10,#09090b);transition:border-color .45s,transform .45s var(--ease)}
+.impl-row:hover{border-color:var(--gold-line);transform:translateY(-3px)}
+.impl-prob,.impl-sol{display:flex;align-items:center;gap:.9rem;padding:1.15rem 1.4rem}
+.impl-prob{background:rgba(224,101,79,.045)}
+.impl-sol{background:rgba(196,168,130,.045)}
+.impl-ic{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);display:grid;place-items:center;flex-shrink:0}
+.impl-prob .impl-ic{color:var(--red)}.impl-sol .impl-ic{color:var(--gold)}
+.impl-t b{display:block;font-size:13.5px;font-weight:400;color:var(--warm-white);line-height:1.2}
+.impl-t span{font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
+.impl-prob .impl-t span{color:var(--red)}.impl-sol .impl-t span{color:var(--gold)}
+.impl-arrow{display:grid;place-items:center;color:var(--chrome);background:linear-gradient(90deg,rgba(224,101,79,.06),rgba(196,168,130,.07))}
+.impl-arrow svg{animation:implpulse 2.6s var(--ease) infinite}
+@keyframes implpulse{0%,100%{transform:translateX(-2px);opacity:.6}50%{transform:translateX(2px);opacity:1}}
+
+/* ════════════════  RESPONSIVE  ════════════════ */
+@media(max-width:1000px){
+  .founder{grid-template-columns:1fr;gap:2.5rem}.founder-photo{max-width:420px}
+  .engine{grid-template-columns:1fr}
+  .sc-feature{grid-template-columns:1fr}.scf-vis{border-left:none;border-top:1px solid var(--line)}
+  .dna-wrap{grid-template-columns:1fr;justify-items:center;gap:1.2rem}
+  .dna-stages,.dna-out{display:none}
+  #dnascan{height:240vh}
+}
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;position:absolute;top:100%;right:1rem;flex-direction:column;background:rgba(10,10,12,.97);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:10px;padding:1.4rem 1.8rem;gap:1.3rem;align-items:flex-start;margin-top:.5rem}
+  .nav-toggle{display:block}
+  .vs{grid-template-columns:1fr}
+  .vs-col.generic{border-right:1px solid var(--line);border-bottom:none}.vs-col.intel{border-left:1px solid var(--gold-line)}
+  .vs-mid{width:100%;height:54px}
+  .tiers4{grid-template-columns:1fr 1fr}
+  .timeline{grid-template-columns:1fr 1fr 1fr;gap:1.6rem 1rem}.timeline::before,.tl-line{display:none}
+  .showcase{grid-template-columns:repeat(2,1fr)}.sc-wide,.sc-half,.sc-third{grid-column:span 2}
+  .map-stage canvas{height:440px}
+  .gp-sig,.gp-ring{display:none}
+  .work-grid{grid-template-columns:repeat(2,1fr)}
+  .case-body{grid-template-columns:1fr}
+  .case-arrow{display:none}
+  .impl-row{grid-template-columns:1fr}
+  .impl-arrow{padding:.45rem 0;background:rgba(196,168,130,.05)}
+  .impl-arrow svg{transform:rotate(90deg)}
+}
+@media(max-width:600px){
+  .wrap{padding:0 1.3rem}
+  .eng-metrics{grid-template-columns:1fr}
+  .tiers4{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr}
+  .showcase{grid-template-columns:1fr}.sc-wide,.sc-half,.sc-third{grid-column:span 1}
+  .foot-top{grid-template-columns:1fr 1fr}
+  .leak-row{grid-template-columns:1fr auto;gap:.6rem 1rem}.leak-row .meta-fix{grid-column:1;text-align:left}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .gpanel{display:none}
+  .map-stage canvas{height:380px}
+  .opp-chip{min-width:130px}
+  .work-grid{grid-template-columns:1fr}
+  .case-head h3{font-size:1.4rem}
+}
+@media(max-width:420px){.foot-top{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;filter:none;transition:none}
+  *{animation:none!important}
+  #hero h1 .w{opacity:1;transform:none}
+  .hero-sub,.hero-ctas,.hero-trust,.scrollcue,.gpanel{opacity:1!important}
+  html{scroll-behavior:auto}
+  #dnascan{height:auto}.dna-sticky{position:relative;height:auto;padding:5rem 0}
+}
 </style>
 </head>
 <body>
 
-<!-- ───────────────── NAV ───────────────── -->
+<div class="env" aria-hidden="true">
+  <div class="mesh"></div>
+  <div class="glow g1" data-par="0.10"></div>
+  <div class="glow g2" data-par="-0.16"></div>
+  <div class="glow g3" data-par="0.07"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ───────────── NAV ───────────── -->
 <nav id="nav">
   <a href="#hero" class="brand">Preset <b>&amp;</b> Profit</a>
   <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('navlinks').classList.toggle('open')">☰</button>
   <div class="nav-links" id="navlinks">
-    <a href="methodology.html">Methodology</a>
-    <a href="sample-report.html">Sample Report</a>
-    <a href="#pricing">Pricing</a>
-    <a href="about.html">About</a>
-    <a href="https://app.presetprofit.com/login">Log in</a>
+    <a href="#work" class="t">The Work</a>
+    <a href="#os" class="t">The System</a>
+    <a href="#cases" class="t">Transformations</a>
+    <a href="#pricing" class="t">Engagements</a>
+    <a href="about.html" class="t">About</a>
+    <a href="https://app.presetprofit.com/login" class="t nav-login">Log in</a>
     <a href="https://app.presetprofit.com/audit" class="nav-cta">Run My Audit</a>
   </div>
 </nav>
 
-<!-- ───────────────── HERO ───────────────── -->
+<!-- ───────────── HERO · INTELLIGENCE CHAMBER ───────────── -->
 <section id="hero">
-  <canvas id="heroCanvas"></canvas>
-  <div class="hero-glow"></div>
-  <div class="hero-content">
-    <div class="eyebrow">Business Intelligence · Revenue Diagnostics</div>
-    <h1>Your business is leaking<br>revenue. <em class="cream">We show you<br>exactly where.</em></h1>
-    <p class="hero-sub">Preset &amp; Profit runs a forensic AI audit of your website, offer, funnel, and operations — then hands you a prioritized plan to fix what's quietly costing you the most.</p>
+  <canvas id="chamberCanvas"></canvas>
+  <div class="chamber-floor"></div>
+  <div class="chamber-vignette"></div>
+
+  <div class="float-layer" aria-hidden="true">
+    <div class="gpanel gp-alert" data-depth="26"><div class="gp-k"><i></i> Revenue Alert</div><b>14 missed calls</b><small>this week · unanswered</small></div>
+    <div class="gpanel gp-opp" data-depth="-30"><div class="gp-k"><i></i> Recoverable</div><b>$12,400<span style="font-size:11px;color:var(--chrome);font-family:var(--sans)">/mo</span></b><small>across 6 systems</small></div>
+    <div class="gpanel gp-sig" data-depth="20"><div class="gp-k"><i></i> Signal</div><b>Review velocity ↓ 38%</b><small>trust eroding</small></div>
+    <div class="gpanel gp-ring" data-depth="-22"><div class="r"><b>78</b></div><div><b style="font-size:12px">Opportunity</b><small>score · high</small></div></div>
+  </div>
+
+  <div class="hero-inner" id="heroInner">
+    <div class="hero-tag"><i></i> Business Intelligence Company</div>
+    <h1 id="heroHead">
+      <span class="line"><span class="w">Business</span> <span class="w">Intelligence</span></span>
+      <span class="line"><span class="w">That</span> <span class="w">Shows</span> <span class="w">You</span></span>
+      <span class="line"><em class="gold"><span class="w">Where</span> <span class="w">Money</span> <span class="w">Is</span> <span class="w">Leaking</span></em></span>
+    </h1>
+    <p class="hero-sub">Preset &amp; Profit scans your website, visibility, reviews, follow-up, and trust signals — shows exactly where your business is losing money and what to recover first — then builds the systems, software, and automation that recover it.</p>
     <div class="hero-ctas">
-      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
-        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg>
-      </a>
-      <a href="sample-report.html" class="btn btn-ghost">View a Sample Report</a>
+      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Business Audit
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg></a>
+      <a href="#dnascan" class="btn btn-ghost">Watch It Think</a>
     </div>
     <div class="hero-trust">
-      <span><i class="dot"></i> No sales call required</span>
+      <span><i class="dot"></i> Industry-specific analysis</span>
       <span><i class="dot"></i> First audit is free</span>
-      <span><i class="dot"></i> Results in minutes, not weeks</span>
+      <span><i class="dot"></i> Results in minutes</span>
     </div>
   </div>
+
+  <div class="scrollcue">Begin Diagnostic<div class="ln"></div></div>
 </section>
 
-<!-- ───────────────── TRUST STRIP ───────────────── -->
+<!-- ───────────── MARQUEE ───────────── -->
 <div class="strip">
-  <div class="wrap">
-    <span>Built for Founders</span>
-    <span>Consultants</span>
-    <span>Agencies</span>
-    <span>Operators</span>
-    <span>SaaS Teams</span>
-  </div>
+  <div class="strip-label">Built for how businesses actually make money</div>
+  <div class="marquee-mask"><div class="marquee">
+    <span>Restaurants</span><span>Dentists</span><span>Contractors</span><span>Auto Shops</span><span>Barbers <i>&amp;</i> Salons</span><span>Attorneys</span><span>Med Spas</span><span>Gyms</span>
+    <span>Restaurants</span><span>Dentists</span><span>Contractors</span><span>Auto Shops</span><span>Barbers <i>&amp;</i> Salons</span><span>Attorneys</span><span>Med Spas</span><span>Gyms</span>
+  </div></div>
 </div>
 
-<!-- ───────────────── PROBLEM ───────────────── -->
-<section id="problem" class="section-pad">
-  <div class="wrap">
-    <div class="split">
-      <div class="section-head reveal" style="margin-bottom:0">
-        <span class="eyebrow">The Expensive Blind Spot</span>
-        <h2 class="h2">Most businesses can't see<br><em class="cream">what's costing them the most.</em></h2>
-        <p class="lead">Revenue rarely disappears in one obvious place. It drains slowly — through the gaps between your website, your offer, your follow-up, and your operations. You feel the symptom (flat months, rising ad costs, "we're busy but not profitable") long before you can name the cause. The audit names the cause.</p>
+<!-- ───────────── SIGNATURE #1 · BUSINESS DNA SCAN ───────────── -->
+<section id="dnascan">
+  <div class="dna-sticky">
+    <div class="dna-glow"></div>
+    <div class="dna-eyebrow">
+      <span class="eyebrow"><span class="pip"></span>Signature · Live Diagnostic</span>
+      <h2>Business DNA Scan</h2>
+    </div>
+    <div class="dna-wrap">
+      <!-- left: stages -->
+      <div class="dna-stages" id="dnaStages">
+        <div class="dna-stage" data-i="0"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><rect x="2" y="3" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.1" fill="none" color="#9a9aa3"/></svg></span><span class="sl">Website Scan</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="1"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" stroke="#9a9aa3" stroke-width="1.1" fill="none"/><path d="M2 7h10M7 2c2 2 2 8 0 10M7 2c-2 2-2 8 0 10" stroke="#9a9aa3" stroke-width=".8" fill="none"/></svg></span><span class="sl">Google Profile Scan</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="2"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 2l1.5 3 3.3.4-2.4 2.3.6 3.3L7 9.7 3.4 11.3l.6-3.3L1.6 5.4l3.3-.4z" stroke="#9a9aa3" stroke-width="1" fill="none"/></svg></span><span class="sl">Review Analysis</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="3"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><path d="M2 4h10v6H2z" stroke="#9a9aa3" stroke-width="1.1" fill="none"/><path d="M2 4l5 4 5-4" stroke="#9a9aa3" stroke-width="1.1" fill="none"/></svg></span><span class="sl">Follow-Up Analysis</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="4"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.2" stroke="#9a9aa3" stroke-width="1.1" fill="none"/><path d="M1 7c2-3 10-3 12 0-2 3-10 3-12 0z" stroke="#9a9aa3" stroke-width="1.1" fill="none"/></svg></span><span class="sl">Visibility Analysis</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="5"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 2l4.5 2v3c0 3-2 4.5-4.5 5.5C4.5 11.5 2.5 10 2.5 7V4z" stroke="#9a9aa3" stroke-width="1.1" fill="none"/></svg></span><span class="sl">Trust Analysis</span><span class="sx">done</span></div>
+        <div class="dna-stage" data-i="6"><span class="si"><svg width="12" height="12" viewBox="0 0 14 14"><path d="M2 11V8M5.5 11V5M9 11V6.5M12.5 11V3" stroke="#9a9aa3" stroke-width="1.3"/></svg></span><span class="sl">Revenue Analysis</span><span class="sx">done</span></div>
       </div>
-      <div class="reveal d2">
-        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Broken funnels</h4><p>Visitors arrive, get confused, and leave — and you never see the handoff that lost them.</p></div></div>
-        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Weak positioning &amp; unclear offers</h4><p>If a prospect can't tell what you do and why it's worth the price in 5 seconds, the rest doesn't matter.</p></div></div>
-        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Poor website conversion</h4><p>You're paying for traffic that bounces against friction you've stopped noticing.</p></div></div>
-        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Slow follow-up &amp; missed automation</h4><p>Leads go cold in hours while manual processes quietly cap how much you can grow.</p></div></div>
-        <div class="leak"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#D9614F" stroke-width="1" fill="none"/><path d="M8 4v5M8 11.5v.5" stroke="#D9614F" stroke-width="1.2"/></svg><div><h4>Bad customer journeys &amp; hidden operational leaks</h4><p>The work gets done, but the path is leaking time, margin, and goodwill at every seam.</p></div></div>
+      <!-- center: orb -->
+      <div class="dna-orb" id="dnaOrb">
+        <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+        <div class="sweep"></div>
+        <div class="dotring" id="dnaDots"></div>
+        <div class="core"><div class="pct" id="dnaPct">0%</div><div class="pl" id="dnaStatus">Initializing</div></div>
+      </div>
+      <!-- right: live scores -->
+      <div class="dna-out" id="dnaOut">
+        <div class="dna-score" data-i="0" data-c="var(--red)" data-v="64"><div class="top"><span class="nm">Revenue Leak</span><span class="vv">—</span></div><div class="track"><span class="bar"></span></div></div>
+        <div class="dna-score" data-i="2" data-c="var(--amber)" data-v="58"><div class="top"><span class="nm">Trust &amp; Reviews</span><span class="vv">—</span></div><div class="track"><span class="bar"></span></div></div>
+        <div class="dna-score" data-i="4" data-c="var(--scan)" data-v="41"><div class="top"><span class="nm">Visibility</span><span class="vv">—</span></div><div class="track"><span class="bar"></span></div></div>
+        <div class="dna-score" data-i="6" data-c="var(--gold)" data-v="78"><div class="top"><span class="nm">Opportunity</span><span class="vv">—</span></div><div class="track"><span class="bar"></span></div></div>
+      </div>
+    </div>
+    <div class="dna-hint" id="dnaHint">Scroll to run the scan</div>
+  </div>
+</section>
+
+<!-- ───────────── COMPARISON ───────────── -->
+<section id="intelligence" class="section-pad">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>The Difference</span>
+      <h2 class="h2">The difference between a report<br><em class="cream">and real intelligence.</em></h2>
+      <p class="lead">Most audits hand you a generic checklist. Preset &amp; Profit analyzes what actually drives revenue in your industry — then ranks every finding by the money it's costing you.</p>
+    </div>
+    <div class="vs reveal d1">
+      <div class="vs-col generic">
+        <div class="k">Generic Audit</div>
+        <h3>A score and a checklist.</h3>
+        <p class="tagline">Surface-level grades that look thorough and change nothing.</p>
+        <ul class="vs-list">
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#4a4a52" stroke-width="1.2"/></svg>SEO score with no business context</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#4a4a52" stroke-width="1.2"/></svg>Page-speed number in isolation</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#4a4a52" stroke-width="1.2"/></svg>Generic "best practice" website tips</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#4a4a52" stroke-width="1.2"/></svg>Surface-level recommendations</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#4a4a52" stroke-width="1.2"/></svg>The same advice for every business</li>
+        </ul>
+      </div>
+      <div class="vs-mid"><div class="o">vs</div></div>
+      <div class="vs-col intel">
+        <div class="k">Preset &amp; Profit Intelligence</div>
+        <h3>A diagnosis and a plan.</h3>
+        <p class="tagline">What's broken, what it costs, and what to fix first.</p>
+        <ul class="vs-list">
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Industry-specific revenue paths</b> — what actually makes you money</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Conversion bottlenecks</b> located, not guessed</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Missed-opportunity detection</b> across your funnel</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Follow-up &amp; automation</b> recommendations</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Trust &amp; visibility analysis</b> for your local market</li>
+          <li><svg class="gx" width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>An action plan ranked by money impact</b></li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── HOW IT WORKS ───────────────── -->
-<section id="how" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<!-- ───────────── SIGNATURE #2 · REVENUE RECOVERY MAP ───────────── -->
+<section id="recovery" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
-      <span class="eyebrow">How It Works</span>
-      <h2 class="h2">From blind spots to a<br><em class="cream">board-ready action plan.</em></h2>
-      <p class="lead">Four steps. No spreadsheets, no guesswork, no week-long consulting engagement to get a first answer.</p>
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>Signature · Revenue Recovery Map</span>
+      <h2 class="h2">Everything in your business<br><em class="cream">is connected.</em></h2>
+      <p class="lead">Reviews feed trust. Trust feeds calls. Calls feed follow-up. When one system breaks, revenue leaks through the whole network. The map shows what's broken — and what recovers when you fix it.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal d1"><div class="bar"></div><h3>Scan</h3><p>We analyze your public business presence — website, offer, copy, funnel structure, page speed, and the signals your customers actually see.</p></div>
-      <div class="step reveal d2"><div class="bar"></div><h3>Analyze</h3><p>The engine evaluates UX, conversion, positioning, automation, and operations against patterns drawn from how high-performing businesses are built.</p></div>
-      <div class="step reveal d3"><div class="bar"></div><h3>Score &amp; Prioritize</h3><p>Findings are scored by severity and ranked by estimated revenue impact — so you see what's costing you the most, first.</p></div>
-      <div class="step reveal d4"><div class="bar"></div><h3>Act</h3><p>You get a prioritized plan with clear next steps and an executive summary — ready to act on yourself or hand to your team.</p></div>
+    <div class="map-stage reveal d1">
+      <canvas id="mapCanvas"></canvas>
+      <div class="map-tip">Hover a node</div>
+      <div class="map-legend">
+        <span><i class="lr"></i> Leaking</span>
+        <span><i class="lg"></i> Recovered</span>
+        <span><i class="lb"></i> Signal flow</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── FEATURES ───────────────── -->
-<section id="features" class="section-pad">
+<!-- ───────────── SIGNATURE #3 · INDUSTRY INTELLIGENCE ENGINE ───────────── -->
+<section id="industries" class="section-pad">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">What The Audit Finds</span>
-      <h2 class="h2">Eight layers of analysis,<br><em class="cream">one prioritized report.</em></h2>
-      <p class="lead">Each module examines a different way businesses lose money — then consolidates everything into a single, ranked action plan.</p>
+      <span class="eyebrow"><span class="pip"></span>Signature · Industry Intelligence Engine</span>
+      <h2 class="h2">Not every metric matters<br><em class="cream">equally to every business.</em></h2>
+      <p class="lead">A restaurant doesn't make money the same way a dentist does. The engine re-weights what actually drives revenue for each industry — and ignores the noise that doesn't.</p>
     </div>
-    <div class="grid g4">
-      <div class="card reveal d1"><div class="k">01</div><h3>AI Business Audit</h3><p>A complete diagnostic of how your business presents, sells, and operates — the foundation every other module builds on.</p></div>
-      <div class="card reveal d2"><div class="k">02</div><h3>Website &amp; Funnel Analysis</h3><p>Where attention is lost: structure, clarity, speed, and the path from first click to conversion.</p></div>
-      <div class="card reveal d3"><div class="k">03</div><h3>Offer &amp; Positioning Review</h3><p>Whether your offer is clear, differentiated, and priced to reflect the value you actually deliver.</p></div>
-      <div class="card reveal d4"><div class="k">04</div><h3>Automation Opportunity Mapping</h3><p>The manual work quietly capping your growth — and exactly where automation pays for itself first.</p></div>
-      <div class="card reveal d1"><div class="k">05</div><h3>Conversion Leak Detection</h3><p>The specific points of friction turning interested visitors into bounces, ranked by what they cost you.</p></div>
-      <div class="card reveal d2"><div class="k">06</div><h3>Customer Journey Breakdown</h3><p>The full path — discover, decide, buy, return — with the seams where trust and revenue leak out.</p></div>
-      <div class="card reveal d3"><div class="k">07</div><h3>Strategic Growth Roadmap</h3><p>A sequenced plan of what to fix and in what order, so effort compounds instead of scattering.</p></div>
-      <div class="card reveal d4"><div class="k">08</div><h3>Executive Summary Report</h3><p>The whole picture on one page — built to share with partners, your team, or your board.</p></div>
+    <div class="engine reveal d1">
+      <div class="eng-tabs" id="engTabs">
+        <button class="eng-tab active" data-ind="restaurant"><span class="em">🍽️</span><span class="nm">Restaurant<small>Ordering · reviews · repeat</small></span><span class="prog"></span></button>
+        <button class="eng-tab" data-ind="dentist"><span class="em">🦷</span><span class="nm">Dentist<small>Reviews · trust · missed calls</small></span><span class="prog"></span></button>
+        <button class="eng-tab" data-ind="contractor"><span class="em">🛠️</span><span class="nm">Contractor<small>Quotes · calls · Google</small></span><span class="prog"></span></button>
+        <button class="eng-tab" data-ind="auto"><span class="em">🚗</span><span class="nm">Auto Shop<small>Reminders · search · trust</small></span><span class="prog"></span></button>
+        <button class="eng-tab" data-ind="barber"><span class="em">💈</span><span class="nm">Barber &amp; Salon<small>Booking · reminders · loyalty</small></span><span class="prog"></span></button>
+        <button class="eng-tab" data-ind="attorney"><span class="em">⚖️</span><span class="nm">Attorney<small>Trust · intake · reputation</small></span><span class="prog"></span></button>
+      </div>
+      <div class="eng-panel" id="engPanel"></div>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── SAMPLE REPORT ───────────────── -->
-<section id="report" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<!-- ───────────── SIGNATURE #4 · OPPORTUNITY ENGINE ───────────── -->
+<section id="opportunity" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="split">
-      <div class="reveal">
-        <span class="eyebrow" style="display:block;margin-bottom:1.1rem">Sample Report Preview</span>
-        <h2 class="h2">See exactly what<br><em class="cream">you'll receive.</em></h2>
-        <p class="lead" style="margin-top:1.2rem">Every audit returns a scored, prioritized report — not a wall of generic advice. The example shown is illustrative; your numbers reflect your business.</p>
-        <ul style="list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:.9rem">
-          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Executive summary written in plain language</li>
-          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Risk, revenue-leak, automation &amp; conversion scores</li>
-          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Priority fixes ranked by estimated impact</li>
-          <li style="display:flex;gap:.8rem;font-size:13.5px;color:var(--silver)"><span class="dot" style="margin-top:8px"></span>Clear, recommended next actions</li>
-        </ul>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
-          <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
-            <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
-          <a href="sample-report.html" class="btn btn-ghost">Open the full sample report</a>
+    <div class="section-head center reveal" style="margin-bottom:2.6rem">
+      <span class="eyebrow"><span class="pip"></span>Signature · The Opportunity Engine</span>
+      <h2 class="h2">Picture the money<br><em class="cream">coming back.</em></h2>
+    </div>
+    <div class="opp-stage reveal d1" id="oppStage">
+      <div class="opp-label" id="oppName">Local Restaurant · 2 locations</div>
+      <div class="opp-num" id="oppNum">$0</div>
+      <div class="opp-sub">Estimated recoverable revenue · per month</div>
+      <div class="opp-meta">
+        <div class="opp-chip"><div class="ck">Opportunity Score</div><div class="cv" id="oppScore">0</div></div>
+        <div class="opp-chip"><div class="ck">Leaks Detected</div><div class="cv" id="oppLeaks">0</div></div>
+        <div class="opp-chip"><div class="ck">Top Fix Payoff</div><div class="cv" id="oppTop">—</div></div>
+      </div>
+      <div class="opp-recs" id="oppRecs"></div>
+      <div class="opp-dots" id="oppDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── SECTION 5 · THE WORK WE BUILD ───────────── -->
+<section id="work" class="section-pad">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>The Work We Build</span>
+      <h2 class="h2">We don't just find the leaks.<br><em class="cream">We build what closes them.</em></h2>
+      <p class="lead">The audit is the front door. Behind it is a company that builds the software, systems, and infrastructure a modern business runs on — custom, owned by you, and engineered to recover revenue.</p>
+    </div>
+    <div class="work-grid reveal d1" id="workGrid"></div>
+    <p class="work-foot reveal d2">Every build starts from your audit — so we build what your business actually needs first. <a href="contact.html">Request a custom build →</a></p>
+  </div>
+</section>
+
+<!-- ───────────── SECTION 6 · TRANSFORMATIONS ───────────── -->
+<section id="cases" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>Transformations</span>
+      <h2 class="h2">What it looks like<br><em class="cream">when the leaks get fixed.</em></h2>
+      <p class="lead">Representative engagements showing how a business changes once the diagnosis becomes a build. Illustrative scenarios — not specific client claims.</p>
+    </div>
+    <div class="cases reveal d1">
+
+      <div class="case">
+        <div class="case-head"><div class="ch-l"><span class="em">🦷</span><h3>Local Dental Practice<small>Single office · high competition</small></h3></div><span class="tag">Representative engagement</span></div>
+        <div class="case-body">
+          <div class="case-side before">
+            <div class="sk"><i></i> Before</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Outdated website that didn't build trust</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Calls going to voicemail during procedures</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Only a handful of recent reviews</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>No follow-up after a new inquiry</div>
+          </div>
+          <div class="case-arrow"><svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h17M13 2l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg></div>
+          <div class="case-side after">
+            <div class="sk"><i></i> After the build</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Credible, fast website</b> with clear booking</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Missed-call text-back</b> so no patient is lost</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Automated review requests</b> building reputation</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Same-hour follow-up</b> on every new lead</div>
+          </div>
         </div>
+        <div class="case-foot"><span class="out"><b>↑</b> Booked appointments</span><span class="out"><b>↓</b> Missed calls</span><span class="out"><b>↑</b> Review rating &amp; trust</span><span class="note">Directional outcomes · illustrative</span></div>
       </div>
 
-      <div class="report reveal d2">
-        <div class="report-bar">
-          <span class="tl"></span><span class="tl"></span><span class="tl"></span>
-          <span class="title">Audit · acme-co.com</span>
-          <span class="live"><i></i> Analysis complete</span>
-        </div>
-        <div class="report-body">
-          <div class="scores">
-            <div class="score"><div class="gauge" style="--v:72;--c:var(--red)"><b>72</b></div><div class="lbl">Risk<br>Score</div></div>
-            <div class="score"><div class="gauge" style="--v:64;--c:var(--amber)"><b>64</b></div><div class="lbl">Revenue<br>Leak</div></div>
-            <div class="score"><div class="gauge" style="--v:38;--c:var(--blue)"><b>38</b></div><div class="lbl">Automation<br>Score</div></div>
-            <div class="score"><div class="gauge" style="--v:54;--c:var(--gold)"><b>54</b></div><div class="lbl">Conversion<br>Score</div></div>
+      <div class="case">
+        <div class="case-head"><div class="ch-l"><span class="em">🛠️</span><h3>Home-Services Contractor<small>Regional · quote-driven</small></h3></div><span class="tag">Representative engagement</span></div>
+        <div class="case-body">
+          <div class="case-side before">
+            <div class="sk"><i></i> Before</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Quote requests slipping through a broken form</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Slow to respond, losing jobs to faster rivals</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>No project photos to prove quality</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Thin, unoptimized Google presence</div>
           </div>
-          <div class="report-summary">
-            <span class="tag">Executive Summary</span>
-            <p>The business has strong demand but loses most of it before purchase. The offer is unclear above the fold, follow-up is manual and slow, and three high-traffic pages leak conversions. Fixing the top two issues is estimated to recover the majority of lost pipeline within one quarter.</p>
+          <div class="case-arrow"><svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h17M13 2l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg></div>
+          <div class="case-side after">
+            <div class="sk"><i></i> After the build</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Reliable lead capture</b> that routes instantly</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Speed-to-lead automation</b> within minutes</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Project galleries</b> that close bigger jobs</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Optimized Google profile</b> for local search</div>
           </div>
-          <div style="font-size:9px;letter-spacing:2px;color:var(--chrome);text-transform:uppercase;margin-bottom:.4rem">Priority Fixes · Ranked by Impact</div>
-          <div class="fix"><span class="pri hi">High</span><span class="txt">Unclear offer above the fold on homepage</span><span class="impact">Est. high impact</span></div>
-          <div class="fix"><span class="pri hi">High</span><span class="txt">No automated lead follow-up within first hour</span><span class="impact">Est. high impact</span></div>
-          <div class="fix"><span class="pri md">Med</span><span class="txt">Pricing page friction &amp; missing trust signals</span><span class="impact">Est. med impact</span></div>
-          <div class="fix"><span class="pri md">Med</span><span class="txt">Slow mobile load on top landing page</span><span class="impact">Est. med impact</span></div>
-          <div class="fix"><span class="pri lo">Low</span><span class="txt">Inconsistent post-purchase journey</span><span class="impact">Est. low impact</span></div>
         </div>
+        <div class="case-foot"><span class="out"><b>↑</b> Quotes captured</span><span class="out"><b>↓</b> Response time</span><span class="out"><b>↑</b> Jobs won</span><span class="note">Directional outcomes · illustrative</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-head"><div class="ch-l"><span class="em">🍽️</span><h3>Restaurant Group<small>Two locations · delivery + dine-in</small></h3></div><span class="tag">Representative engagement</span></div>
+        <div class="case-body">
+          <div class="case-side before">
+            <div class="sk"><i></i> Before</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Confusing online ordering with heavy drop-off</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>No system to bring guests back</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Inconsistent reviews across locations</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 4l6 6M10 4l-6 6" stroke="#E0654F" stroke-width="1.2"/></svg>Ad spend with no retargeting</div>
+          </div>
+          <div class="case-arrow"><svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h17M13 2l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg></div>
+          <div class="case-side after">
+            <div class="sk"><i></i> After the build</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Frictionless ordering</b> across both locations</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Automated win-back</b> &amp; loyalty messaging</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Steady review velocity</b>, location by location</div>
+            <div class="case-row"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg><b>Retargeting</b> that recovers lost visitors</div>
+          </div>
+        </div>
+        <div class="case-foot"><span class="out"><b>↑</b> Repeat orders</span><span class="out"><b>↑</b> Review volume</span><span class="out"><b>↑</b> Return on ad spend</span><span class="note">Directional outcomes · illustrative</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── SECTION · THE IMPLEMENTATION ENGINE ───────────── -->
+<section id="implementation" class="section-pad">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>The Implementation Engine</span>
+      <h2 class="h2">We don't just identify problems.<br><em class="cream">We install the fix.</em></h2>
+      <p class="lead">Every finding maps to a system we build. The audit names the leak; the implementation engine closes it — turning each recommendation into something running in your business.</p>
+    </div>
+    <div class="impl reveal d1" id="implGrid"></div>
+  </div>
+</section>
+
+<!-- ───────────── SIGNATURE · THE BUSINESS OPERATING SYSTEM ───────────── -->
+<section id="os" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>The Business Operating System</span>
+      <h2 class="h2">We don't hand you a report<br><em class="cream">and walk away.</em></h2>
+      <p class="lead">A struggling business doesn't need one fix — it needs a system. Preset &amp; Profit installs all seven layers: one connected operating system that takes a business from leaking revenue to compounding growth.</p>
+    </div>
+    <div class="os reveal d1">
+      <div class="os-spine"><div class="fill" id="osFill"></div></div>
+      <div class="os-track" id="osTrack"></div>
+    </div>
+    <div class="os-foot reveal">
+      <h4>Seven layers. One operating system. Everything feeds everything.</h4>
+      <div class="os-eco">
+        <span><b>Business Intelligence</b></span><span>Audit Platform</span><span>Automation</span><span>CRM Infrastructure</span><span>Custom Websites</span><span>AI Agents</span><span>Content Engine</span><span>Dashboards</span><span>Reporting</span><span>Reputation Systems</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── PRICING ───────────────── -->
+<!-- ───────────── PLATFORM SHOWCASE ───────────── -->
+<section id="platform" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="pip"></span>Inside The Platform</span>
+      <h2 class="h2">A diagnostic lab<br><em class="cream">for your business.</em></h2>
+      <p class="lead">Every audit produces a complete intelligence picture — not a PDF you skim once and forget.</p>
+    </div>
+    <div class="showcase reveal d1">
+      <div class="sc sc-feature">
+        <div class="scf-copy">
+          <div class="k">Revenue Recovery Plan</div>
+          <h3>Money you can get back, sequenced.</h3>
+          <p>The platform models what each fix is worth and orders them so your effort compounds — the highest-impact recovery first, the quick wins flagged, the long plays scheduled.</p>
+        </div>
+        <div class="scf-vis">
+          <div class="recover-row"><span class="rl">Missed-call recovery</span><span class="rt"><i style="width:92%"></i></span><span class="rv">High</span></div>
+          <div class="recover-row"><span class="rl">Follow-up automation</span><span class="rt"><i style="width:78%"></i></span><span class="rv">High</span></div>
+          <div class="recover-row"><span class="rl">Review velocity</span><span class="rt"><i style="width:54%"></i></span><span class="rv">Med</span></div>
+          <div class="recover-row"><span class="rl">Offer clarity</span><span class="rt"><i style="width:40%"></i></span><span class="rv">Med</span></div>
+        </div>
+      </div>
+      <div class="sc sc-third"><div class="k">Opportunity Score</div><h3>One number</h3><p>How much recoverable revenue your business is sitting on, at a glance.</p></div>
+      <div class="sc sc-third"><div class="k">Business DNA</div><h3>Your profile</h3><p>The pattern of how your business earns — and where it breaks.</p>
+        <div class="dna"><i style="animation-delay:0s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.6s"></i><i style="animation-delay:.8s"></i><i style="animation-delay:1s"></i><i style="animation-delay:1.2s"></i><i style="animation-delay:1.4s"></i><i style="animation-delay:1.6s"></i><i style="animation-delay:1.8s"></i></div>
+      </div>
+      <div class="sc sc-third"><div class="k">Quick Wins</div><h3>Fix this week</h3><p>The low-effort, high-return changes you can make immediately.</p></div>
+      <div class="sc sc-half"><div class="k">Automation Recommendations</div><h3>Where systems pay for themselves.</h3><p>The manual work capping your growth — missed-call text-back, lead follow-up, review requests, reminders — mapped to the tools that fix it.</p></div>
+      <div class="sc sc-half"><div class="k">Owner Priority Map</div><h3>What deserves your attention.</h3><p>A ranked view built for the person running the business — decisions, not a 60-page report. Each item carries its impact and the order to act in.</p></div>
+      <div class="sc sc-wide"><div class="k">90-Day Growth Plan</div><h3>A sequenced path, not a pile of tactics.</h3><p>Your findings turned into a quarter of focused execution — what to fix now, what to build next, and what to measure — so the work moves the needle instead of scattering.</p></div>
+      <div class="sc sc-third"><div class="k">Audit Report</div><h3>Board-ready</h3><p>The whole picture on a page you can share with a partner or team.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── POSITIONING ───────────── -->
+<section id="position" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <span class="eyebrow reveal"><span class="pip"></span>The Real Point</span>
+    <h2 class="h2 reveal d1">This is not marketing advice.<br><em class="gold">This is business diagnostics.</em></h2>
+    <p class="lead reveal d2">Most owners don't need more random tactics. They need to know what is actually costing them money. Preset &amp; Profit gives owners a clear view of what is broken, what matters, and what to fix first — backed by a model that understands how their specific business makes money.</p>
+    <div class="pos-line reveal d3"></div>
+  </div>
+</section>
+
+<!-- ───────────── PRICING ───────────── -->
 <section id="pricing" class="section-pad">
   <div class="wrap">
-    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
-      <span class="eyebrow">Pricing &amp; Audit Depth</span>
-      <h2 class="h2">Priced to the size<br><em class="cream">of the problem.</em></h2>
-      <p class="lead">Start free. Go deeper when the stakes justify it. Every tier offers three levels of audit depth.</p>
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="pip"></span>Engagements</span>
+      <h2 class="h2">Start with the truth.<br><em class="cream">Go as deep as it's worth.</em></h2>
+      <p class="lead">From a fast diagnostic to a full intelligence overhaul. Every engagement is priced to the size of the problem — never to manufactured urgency.</p>
     </div>
-    <div class="tiers">
-      <!-- Individual -->
+    <div class="tiers4">
       <div class="tier reveal d1">
-        <div class="badge">&nbsp;</div>
-        <h3>Individual</h3>
-        <p class="who">For solo founders &amp; operators who want clarity on what to fix next.</p>
-        <div class="depth"><div class="row"><span class="name">Free Snapshot</span><span class="price">$0</span></div><p class="desc">High-level audit with your four core scores and your top priority fixes.</p></div>
-        <div class="depth"><div class="row"><span class="name">Deep Audit</span><span class="price">$97</span></div><p class="desc">Full multi-module analysis, prioritized roadmap, and executive summary report.</p></div>
-        <div class="depth"><div class="row"><span class="name">Operator</span><span class="price">$297<small>/qtr</small></span></div><p class="desc">Quarterly re-audits to track progress and catch new leaks as you grow.</p></div>
+        <div class="badge">&nbsp;</div><h3>Starter Audit</h3>
+        <p class="who">A fast scan of your digital presence and top revenue leaks.</p>
+        <div class="pr">Free</div><div class="prnote">First audit, no call required</div>
+        <ul>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Opportunity score</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Top revenue leaks identified</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Industry-weighted snapshot</li>
+        </ul>
         <a href="https://app.presetprofit.com/audit" class="btn btn-ghost">Start Free</a>
       </div>
-      <!-- Professional -->
       <div class="tier featured reveal d2">
-        <div class="badge">Most Popular</div>
-        <h3>Professional</h3>
-        <p class="who">For consultants &amp; growing companies acting on the findings, not just reading them.</p>
-        <div class="depth"><div class="row"><span class="name">Professional Audit</span><span class="price">$497</span></div><p class="desc">Deeper analysis with detailed conversion &amp; automation breakdowns and impact estimates.</p></div>
-        <div class="depth"><div class="row"><span class="name">Growth Intelligence</span><span class="price">$1,200</span></div><p class="desc">Full strategic roadmap, competitor context, and a sequenced 90-day execution plan.</p></div>
-        <div class="depth"><div class="row"><span class="name">Embedded</span><span class="price">$2,500<small>/mo</small></span></div><p class="desc">Continuous monitoring with monthly intelligence reviews and a standing roadmap.</p></div>
-        <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Choose Professional</a>
+        <div class="badge">Most Chosen</div><h3>Professional Intelligence Audit</h3>
+        <p class="who">A deeper, multi-layer analysis with a ranked recovery plan.</p>
+        <div class="pr">$497</div><div class="prnote">One-time, full report</div>
+        <ul>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Full multi-layer scan</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Revenue recovery plan</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Automation recommendations</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Owner priority map</li>
+        </ul>
+        <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run This Audit</a>
       </div>
-      <!-- Agency / Enterprise -->
       <div class="tier reveal d3">
-        <div class="badge">&nbsp;</div>
-        <h3>Agency / Enterprise</h3>
-        <p class="who">For agencies &amp; operators running audits across many businesses — or overhauling one completely.</p>
-        <div class="depth"><div class="row"><span class="name">Multi-Account</span><span class="price">$4,000</span></div><p class="desc">Audit a portfolio of clients or locations with consolidated reporting.</p></div>
-        <div class="depth"><div class="row"><span class="name">White-Label</span><span class="price">$8,000</span></div><p class="desc">Run branded audits under your own firm, packaged for client delivery.</p></div>
-        <div class="depth"><div class="row"><span class="name">Complete Overhaul</span><span class="price">$15,000+</span></div><p class="desc">A full technical &amp; growth audit of an entire business, with a hands-on remediation plan.</p></div>
-        <a href="https://app.presetprofit.com/audit" class="btn btn-ghost">Talk to Us</a>
+        <div class="badge">&nbsp;</div><h3>Growth System Buildout</h3>
+        <p class="who">The audit, plus we install the systems that close the leaks.</p>
+        <div class="pr">$4,000<small>+</small></div><div class="prnote">Audit + implementation</div>
+        <ul>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Everything in Professional</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Follow-up &amp; review automation</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Website &amp; conversion fixes</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>90-day execution plan</li>
+        </ul>
+        <a href="contact.html" class="btn btn-ghost">Talk To Us</a>
+      </div>
+      <div class="tier reveal d4">
+        <div class="badge">&nbsp;</div><h3>Full Business Intelligence Overhaul</h3>
+        <p class="who">A complete rebuild of how your business captures and keeps revenue.</p>
+        <div class="pr">Custom</div><div class="prnote">Scoped to your business</div>
+        <ul>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Custom systems &amp; automation</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Website, CRM &amp; follow-up</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Ongoing intelligence reporting</li>
+          <li><svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 7l3 3 5-6" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg>Hands-on remediation</li>
+        </ul>
+        <a href="contact.html" class="btn btn-ghost">Request Scope</a>
       </div>
     </div>
-    <p class="reveal" style="text-align:center;font-size:11.5px;color:var(--mute);margin-top:1.8rem;letter-spacing:.4px">Prices shown are launch reference pricing. The free tier never promises enterprise-grade intelligence it can't deliver — depth scales with the tier.</p>
+    <p class="reveal" style="text-align:center;font-size:11.5px;color:var(--mute);margin-top:1.8rem;letter-spacing:.4px">Reference pricing. No fake scarcity, no hard-selling — depth scales with the size of the problem.</p>
   </div>
 </section>
 
-<!-- ───────────────── TRUST ───────────────── -->
-<section id="trust" class="section-pad" style="background:#0a0a0c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<!-- ───────────── FOUNDER ───────────── -->
+<section id="founder-sec" class="section-pad tint divider-top" style="border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
-      <span class="eyebrow">Why You Can Trust The Output</span>
-      <h2 class="h2">Transparent method.<br><em class="cream">No invented numbers.</em></h2>
-      <p class="lead">We'd rather show you how the audit works than pad a page with testimonials we don't have yet. Here's exactly what you're getting — and you can <a href="methodology.html" style="color:var(--cream);border-bottom:1px solid var(--gold-line)">read the full methodology</a> anytime.</p>
-    </div>
-    <div class="trust-grid">
-      <div class="trust-item reveal d1">
-        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 8l3 3 8-8" stroke="#C4A882" stroke-width="1.3" fill="none"/></svg></div>
-        <h4>Transparent methodology</h4>
-        <p>Every score and recommendation is traceable to what we actually analyzed — your site, offer, funnel, and operational signals. No black box, no vague grades.</p>
+    <div class="founder">
+      <div class="founder-photo reveal r-blur">
+        <img src="assets/founder.jpg" alt="Justin Kittle, founder of Preset & Profit" loading="lazy" />
+        <div class="frame"></div>
+        <div class="tagchip"><b>Justin Kittle</b> · Founder &amp; Systems Architect</div>
       </div>
-      <div class="trust-item reveal d2">
-        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="2.5" y="6" width="10" height="7" rx="1" stroke="#C4A882" stroke-width="1.2" fill="none"/><path d="M5 6V4.5a2.5 2.5 0 015 0V6" stroke="#C4A882" stroke-width="1.2" fill="none"/></svg></div>
-        <h4>Security-conscious by design</h4>
-        <p>We analyze your public business presence and the information you choose to share. We don't ask for credentials you shouldn't hand out, and your data isn't sold.</p>
-      </div>
-      <div class="trust-item reveal d3">
-        <div class="ic"><svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="5.5" stroke="#C4A882" stroke-width="1.2" fill="none"/><path d="M7.5 5v3l2 1.5" stroke="#C4A882" stroke-width="1.2" fill="none"/></svg></div>
-        <h4>Built for operators</h4>
-        <p>Designed for founders, consultants, agencies, and operators — people who need a decision, not a 60-page PDF. Sample outputs are shown, not promised.</p>
+      <div class="founder-copy">
+        <span class="eyebrow reveal"><span class="pip"></span>Who's Behind It</span>
+        <h2 class="h2 reveal d1" style="margin-top:1.1rem">Built by an operator,<br><em class="cream">not a committee.</em></h2>
+        <blockquote class="reveal d2">"I built Preset &amp; Profit because most small business owners don't need more noise. They need clear answers, better systems, and a way to stop losing money through broken follow-up, weak digital presence, and disconnected tools."</blockquote>
+        <p class="lead reveal d3">He builds the whole stack — the intelligence engine, the audit software, the websites, the automations, the CRMs. Not a freelancer renting his time, but a systems architect obsessed with one question: where is this business losing money, and what can be built to recover it?</p>
+        <div class="roles reveal d4"><span>Builder</span><span>Systems Architect</span><span>Business Intelligence Strategist</span><span>Automation Engineer</span><span>Product Creator</span></div>
+        <div class="sig reveal d5"><div class="mono">JK</div><div class="who"><b>Justin Kittle</b><span>Founder, Preset &amp; Profit</span></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── USE CASES ───────────────── -->
-<section id="usecases" class="section-pad">
+<!-- ───────────── FINAL CTA ───────────── -->
+<section id="final" class="section-pad">
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">Who It's For</span>
-      <h2 class="h2">One engine.<br><em class="cream">Many businesses.</em></h2>
-    </div>
-    <div class="uc">
-      <div class="uc-card reveal d1"><div class="k">Local Businesses</div><p>Find why calls and bookings slip away, and which fixes recover the most foot traffic and revenue.</p></div>
-      <div class="uc-card reveal d2"><div class="k">Agencies</div><p>Audit clients in minutes, win pitches with hard findings, and deliver white-labeled intelligence at scale.</p></div>
-      <div class="uc-card reveal d3"><div class="k">SaaS Companies</div><p>Pinpoint activation friction, pricing-page leaks, and onboarding gaps that quietly suppress conversion.</p></div>
-      <div class="uc-card reveal d1"><div class="k">Consultants</div><p>Walk into every engagement with a scored diagnostic that justifies your fee before you say a word.</p></div>
-      <div class="uc-card reveal d2"><div class="k">Automation Companies</div><p>Surface the highest-ROI automation gaps in a prospect's operation — and price the work with confidence.</p></div>
-      <div class="uc-card reveal d3"><div class="k">Creators &amp; Digital Products</div><p>See where your funnel, offer, and follow-up lose buyers between interest and checkout.</p></div>
+    <span class="eyebrow reveal"><span class="pip"></span>Command Center</span>
+    <h2 class="reveal d1">See what your business<br><em class="cream">is missing.</em></h2>
+    <p class="lead reveal d2">Run the diagnostic, step inside the platform, or request a custom build. Every path starts with the truth about where your revenue is going.</p>
+    <div class="hero-ctas reveal d3" style="margin-top:2.6rem">
+      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run Your Business Audit
+        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg></a>
+      <a href="https://app.presetprofit.com/login" class="btn btn-ghost">Enter the Platform</a>
+      <a href="contact.html" class="btn btn-ghost">Request a Custom Build</a>
     </div>
   </div>
 </section>
 
-<!-- ───────────────── AUDIT FORM ───────────────── -->
-<section id="audit" class="section-pad">
-  <div class="wrap">
-    <div class="audit-box reveal">
-      <span class="eyebrow">Start Your Free Audit</span>
-      <h2 class="h2" style="margin-top:1.1rem">See what your business<br><em class="cream">is leaving on the table.</em></h2>
-      <p class="lead" style="margin-top:1rem;max-width:480px;margin-left:auto;margin-right:auto">Enter your website and where to send it. We'll run your audit and deliver your scored report. No call required.</p>
-
-      <a href="https://app.presetprofit.com/audit" class="btn btn-primary" style="margin-top:1.5rem">Run My Free Audit
-        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
-      <p class="form-note">We analyze your public business presence. We don't ask for passwords or sensitive credentials, and we don't sell your data.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ───────────────── FOUNDER CALLOUT ───────────────── -->
-<section class="section-pad" style="border-top:1px solid var(--line)">
-  <div class="wrap split" style="align-items:center">
-    <div class="reveal" style="position:relative;width:100%;max-width:300px;aspect-ratio:4/5;border-radius:10px;overflow:hidden;border:1px solid var(--gold-line);background:linear-gradient(160deg,#161619,#0c0c0e);display:grid;place-items:center;justify-self:center">
-      <img src="assets/founder.jpg" alt="Justin Kittle, Founder of Preset &amp; Profit" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%" />
-      <span style="font-family:var(--serif);font-size:2.4rem;color:var(--gold)">JK</span>
-    </div>
-    <div class="reveal">
-      <span class="eyebrow">The Founder</span>
-      <h2 class="h2" style="margin:1rem 0">Built by an operator,<br><em style="color:var(--cream);font-style:italic;font-weight:300">not a committee.</em></h2>
-      <p class="lead">Preset &amp; Profit is built and run by Justin Kittle — one accountable person you can actually reach, using AI systems and automation to deliver work that used to take a whole team. No outsourced support desk, no anonymous "we."</p>
-      <a href="about.html" class="btn btn-ghost" style="margin-top:1.6rem">Read the founder story
-        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
-    </div>
-  </div>
-</section>
-
-<!-- ───────────────── FINAL CTA ───────────────── -->
-<section id="final" class="section-pad" style="background:#060608">
-  <div class="wrap">
-    <span class="eyebrow reveal">The Audit Is Free. The Blind Spot Isn't.</span>
-    <h2 class="reveal d1">Every month you wait is<br><em class="cream">money you can't see.</em></h2>
-    <p class="lead reveal d2">The problems are already there. The only question is whether you find them before they cost you another quarter.</p>
-    <div class="reveal d3" style="margin-top:2.6rem">
-      <a href="https://app.presetprofit.com/audit" class="btn btn-primary">Run My Free Audit
-        <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0 5h13M9 1l4 4-4 4" stroke="currentColor" stroke-width="1"/></svg></a>
-    </div>
-  </div>
-</section>
-
-<!-- ───────────────── FOOTER ───────────────── -->
-<style>
-  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem}
-  .foot-col h5{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chrome);margin-bottom:1.1rem}
-  .foot-col a{display:block;font-size:13px;color:var(--silver);margin-bottom:.7rem;transition:color .3s}
-  .foot-col a:hover{color:var(--warm-white)}
-  .foot-col .brand{margin-bottom:1rem}
-  .foot-col p{font-size:12.5px;color:var(--mute);line-height:1.7;max-width:240px}
-  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.8rem}
-  .foot-bottom .links{display:flex;gap:1.4rem;flex-wrap:wrap}
-  .foot-bottom .links a{font-size:10px;letter-spacing:1.5px;color:var(--mute);text-transform:uppercase;transition:color .3s}
-  .foot-bottom .links a:hover{color:var(--silver)}
-  @media(max-width:900px){.foot-top{grid-template-columns:1fr 1fr}}
-  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
-</style>
+<!-- ───────────── FOOTER ───────────── -->
 <footer>
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-col">
         <a href="#hero" class="brand">Preset <b>&amp;</b> Profit</a>
-        <p>Independent business intelligence audits for founders, consultants, agencies, and operators.</p>
+        <p>Business intelligence for owners who want the truth about where their revenue is leaking — and a clear path to recover it.</p>
       </div>
-      <div class="foot-col"><h5>Product</h5>
-        <a href="#features">What It Finds</a>
-        <a href="sample-report.html">Sample Report</a>
-        <a href="#pricing">Pricing</a>
-        <a href="methodology.html">Methodology</a>
+      <div class="foot-col"><h5>What We Do</h5>
+        <a href="#work">The Work We Build</a><a href="#industries">Industry Intelligence</a><a href="#cases">Transformations</a><a href="#recovery">Recovery Network</a>
       </div>
       <div class="foot-col"><h5>Company</h5>
-        <a href="about.html">About</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
+        <a href="about.html">About</a><a href="methodology.html">Methodology</a><a href="sample-report.html">Sample Report</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
       </div>
-      <div class="foot-col"><h5>Legal</h5>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-        <a href="refund.html">Refund Policy</a>
+      <div class="foot-col"><h5>Get Started</h5>
+        <a href="https://app.presetprofit.com/audit">Run My Audit</a><a href="https://app.presetprofit.com/login">Log in</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refund Policy</a>
       </div>
     </div>
     <div class="foot-bottom">
       <div class="foot-legal">© 2026 Preset &amp; Profit. All rights reserved.</div>
-      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div>
+      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refund</a><a href="contact.html">Contact</a></div>
     </div>
   </div>
 </footer>
 
 <script>
-  /* ── Nav scroll state ── */
-  const nav = document.getElementById('nav');
-  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
-  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = window.matchMedia('(pointer:fine)').matches;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
-  /* ── Close mobile menu on link click ── */
-  document.querySelectorAll('#navlinks a').forEach(a =>
-    a.addEventListener('click', () => document.getElementById('navlinks').classList.remove('open')));
+/* shared pointer state for parallax */
+const M={x:0,y:0,tx:0,ty:0};
+if(fine&&!reduce){
+  window.addEventListener('pointermove',e=>{ M.tx=(e.clientX/window.innerWidth-.5)*2; M.ty=(e.clientY/window.innerHeight-.5)*2; },{passive:true});
+}
 
-  /* ── Reveal on scroll ── */
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  }, {threshold:.12, rootMargin:'0px 0px -50px 0px'});
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+/* nav */
+const nav=document.getElementById('nav');
+const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>50);
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navlinks').classList.remove('open')));
 
-  /* ── Audit form: graceful submit ──
-     If a form action URL is set (e.g. Formspree), it posts there.
-     Otherwise we prevent default and show the confirmation state. ── */
-  const form = document.getElementById('auditForm');
-  if (form) form.addEventListener('submit', (e) => {
-    const hasBackend = form.getAttribute('action') && form.getAttribute('action').trim().length;
-    if (!hasBackend){
-      e.preventDefault();
-      form.style.display = 'none';
-      document.getElementById('formSuccess').classList.add('show');
-    }
-    // If hasBackend, let it submit normally (and you can add AJAX later).
+/* reveal */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* word-by-word hero headline timing */
+(function(){
+  const ws=document.querySelectorAll('#heroHead .w');
+  ws.forEach((w,i)=>{ w.style.animationDelay=(0.25+i*0.085)+'s'; });
+})();
+
+/* parallax: env glows + hero panels + hero tilt (single rAF) */
+(function(){
+  if(reduce) return;
+  const glows=document.querySelectorAll('.env .glow');
+  const panels=document.querySelectorAll('.gpanel');
+  const heroInner=document.getElementById('heroInner');
+  function loop(){
+    M.x+=(M.tx-M.x)*0.06; M.y+=(M.ty-M.y)*0.06;
+    const sy=window.scrollY;
+    glows.forEach(g=>{const s=parseFloat(g.dataset.par)||0; g.style.transform=`translate(${M.x*18*s*6}px,${sy*s + M.y*14*s*6}px)`;});
+    panels.forEach(p=>{const d=parseFloat(p.dataset.depth)||0; p.style.transform=`translate3d(${M.x*d}px,${M.y*d*0.7}px,0)`;});
+    if(heroInner){ heroInner.style.transform=`rotateY(${M.x*2.2}deg) rotateX(${-M.y*1.6}deg)`; }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* magnetic primary buttons */
+if(fine&&!reduce){
+  document.querySelectorAll('.btn-primary').forEach(btn=>{
+    btn.addEventListener('pointermove',e=>{const r=btn.getBoundingClientRect();const mx=e.clientX-r.left-r.width/2;const my=e.clientY-r.top-r.height/2;btn.style.transform=`translate(${mx*0.18}px,${my*0.28-2}px)`;});
+    btn.addEventListener('pointerleave',()=>{btn.style.transform='';});
   });
+}
 
-  /* ── Hero particle network (vanilla canvas, zero deps) ── */
-  (function(){
-    const canvas = document.getElementById('heroCanvas');
-    if (!canvas) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const ctx = canvas.getContext('2d');
-    let w, h, dpr, nodes = [], raf;
-    const COUNT = window.innerWidth < 700 ? 36 : 64;
-    const MAXD = 130;
+/* count helper */
+function fmtMoney(v){return '$'+Math.round(v).toLocaleString('en-US');}
 
-    function resize(){
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-    function seed(){
-      nodes = [];
-      for (let i=0;i<COUNT;i++){
-        nodes.push({ x:Math.random()*w, y:Math.random()*h,
-          vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25 });
-      }
-    }
-    function tick(){
-      ctx.clearRect(0,0,w,h);
-      for (const n of nodes){
-        n.x+=n.vx; n.y+=n.vy;
-        if (n.x<0||n.x>w) n.vx*=-1;
-        if (n.y<0||n.y>h) n.vy*=-1;
-      }
-      // lines
-      for (let i=0;i<nodes.length;i++){
-        for (let j=i+1;j<nodes.length;j++){
-          const a=nodes[i], b=nodes[j];
-          const dx=a.x-b.x, dy=a.y-b.y;
-          const d=Math.hypot(dx,dy);
-          if (d<MAXD){
-            const o=(1-d/MAXD)*.22;
-            ctx.strokeStyle='rgba(196,168,130,'+o+')';
-            ctx.lineWidth=.6;
-            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-          }
-        }
-      }
-      // nodes
-      for (const n of nodes){
-        ctx.fillStyle='rgba(180,180,190,.5)';
-        ctx.beginPath(); ctx.arc(n.x,n.y,1.1,0,Math.PI*2); ctx.fill();
-      }
-      raf=requestAnimationFrame(tick);
-    }
-    function start(){ resize(); seed(); cancelAnimationFrame(raf); tick(); }
-    window.addEventListener('resize', () => { resize(); seed(); });
-    start();
-  })();
+/* ════ HERO chamber canvas: data streams + depth particles ════ */
+(function(){
+  const c=document.getElementById('chamberCanvas'); if(!c||reduce) return;
+  const ctx=c.getContext('2d'); let w,h,dpr,parts=[],streams=[],raf,vis=true,t=0;
+  function resize(){dpr=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*dpr;c.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);seed();}
+  function seed(){
+    parts=[];const N=w<760?30:60;
+    for(let i=0;i<N;i++)parts.push({x:Math.random()*w,y:Math.random()*h,z:Math.random(),vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18});
+    streams=[];const S=w<760?5:9;
+    for(let i=0;i<S;i++)streams.push({x:Math.random()*w,y:Math.random()*h,len:40+Math.random()*120,sp:.6+Math.random()*1.4,gold:Math.random()>.5});
+  }
+  function tick(){
+    if(!vis){raf=requestAnimationFrame(tick);return;}
+    t+=.005; ctx.clearRect(0,0,w,h);
+    // connection lines (depth particles)
+    for(const p of parts){p.x+=p.vx+M.x*0.25*p.z;p.y+=p.vy+M.y*0.25*p.z;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;}
+    for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const a=parts[i],b=parts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);if(d<130){ctx.strokeStyle='rgba(196,168,130,'+(1-d/130)*.16+')';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+    for(const p of parts){const s=.8+p.z*1.4;ctx.fillStyle='rgba(180,180,190,'+(.25+p.z*.4)+')';ctx.beginPath();ctx.arc(p.x,p.y,s,0,7);ctx.fill();}
+    // vertical data streams
+    for(const s of streams){s.y+=s.sp;if(s.y-s.len>h)s.y=-s.len*Math.random()*2;const g=ctx.createLinearGradient(0,s.y-s.len,0,s.y);const col=s.gold?'196,168,130':'77,166,255';g.addColorStop(0,'rgba('+col+',0)');g.addColorStop(1,'rgba('+col+',.5)');ctx.strokeStyle=g;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(s.x,s.y-s.len);ctx.lineTo(s.x,s.y);ctx.stroke();ctx.fillStyle='rgba('+col+',.9)';ctx.beginPath();ctx.arc(s.x,s.y,1.4,0,7);ctx.fill();}
+    raf=requestAnimationFrame(tick);
+  }
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting;}).observe(c);
+  addEventListener('resize',resize);resize();tick();
+})();
+
+/* ════ SIGNATURE #1 · Business DNA Scan (scroll-driven) ════ */
+(function(){
+  const sec=document.getElementById('dnascan'); if(!sec) return;
+  const pctEl=document.getElementById('dnaPct'), statusEl=document.getElementById('dnaStatus'), hint=document.getElementById('dnaHint');
+  const stages=[...document.querySelectorAll('#dnaStages .dna-stage')];
+  const scores=[...document.querySelectorAll('#dnaOut .dna-score')];
+  const STATUS=['Scanning website','Reading Google profile','Analyzing reviews','Tracing follow-up','Mapping visibility','Weighing trust','Modeling revenue','Diagnosis complete'];
+  // orbiting dots
+  const dotRing=document.getElementById('dnaDots');
+  if(dotRing&&!reduce){for(let i=0;i<8;i++){const d=document.createElement('i');dotRing.appendChild(d);}}
+  const dots=dotRing?[...dotRing.children]:[];
+  let prog=0;
+  function apply(){
+    pctEl.textContent=Math.round(prog*100)+'%';
+    const sf=prog*7;
+    const si=Math.min(Math.floor(sf),7);
+    statusEl.textContent=STATUS[Math.min(si,7)];
+    if(hint)hint.style.opacity=prog>0.04?'0':'1';
+    stages.forEach((s,i)=>{s.classList.toggle('done',i<sf-1);s.classList.toggle('active',i>=sf-1&&i<sf);});
+    scores.forEach(sc=>{const need=(+sc.dataset.i+1)/7;if(prog>=need-0.02){const v=+sc.dataset.v;sc.classList.add('show');sc.querySelector('.vv').textContent=Math.round(v*clamp((prog-(need-0.14))/0.14,0,1));sc.querySelector('.vv').style.color=sc.dataset.c;const bar=sc.querySelector('.bar');bar.style.background=sc.dataset.c;bar.style.width=(v*clamp((prog-(need-0.14))/0.14,0,1))+'%';}else{sc.classList.remove('show');}});
+    // dots radius
+    const R=dotRing?dotRing.parentElement.offsetWidth/2-6:0;
+    dots.forEach((d,i)=>{const ang=(i/dots.length)*Math.PI*2 - Math.PI/2 + prog*Math.PI*1.5;const lit=i/dots.length<=prog;d.style.transform=`translate(${Math.cos(ang)*R}px,${Math.sin(ang)*R}px)`;d.style.opacity=lit?1:.18;d.style.background=lit?'var(--gold)':'#3a3a41';d.style.boxShadow=lit?'0 0 10px var(--gold-glow)':'none';});
+  }
+  let ticking=false;
+  function update(){const total=sec.offsetHeight-window.innerHeight;const p=clamp((-sec.getBoundingClientRect().top)/total,0,1);prog=p;apply();}
+  window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{update();ticking=false;});},{passive:true});
+  window.addEventListener('resize',update);
+  if(reduce){prog=1;} update();
+})();
+
+/* ════ SIGNATURE #2 · Revenue Recovery Map (canvas network) ════ */
+(function(){
+  const c=document.getElementById('mapCanvas'); if(!c) return;
+  const ctx=c.getContext('2d'); let w,h,dpr,raf,vis=false,started=0,t=0,hover=-1;
+  const NODES=[
+    {n:'Website',broken:true},{n:'Reviews',broken:true},{n:'Calls',broken:true},{n:'CRM',broken:true},
+    {n:'Automation',broken:true},{n:'Visibility',broken:false},{n:'Ads',broken:false},{n:'Trust',broken:true},
+    {n:'Retention',broken:true},{n:'Referrals',broken:false},{n:'Revenue',broken:false}
+  ];
+  const EDGES=[[0,1],[1,7],[7,2],[2,3],[3,4],[4,2],[5,6],[6,2],[0,5],[1,9],[8,3],[8,10],[2,10],[4,10],[7,1],[9,10],[5,0],[3,8]];
+  const pulses=EDGES.map((e,i)=>({e,p:Math.random(),sp:.003+Math.random()*.004}));
+  function layout(){w=c.clientWidth;h=c.clientHeight;NODES.forEach((nd,i)=>{const a=(i/NODES.length)*Math.PI*2-Math.PI/2;const rx=w*0.33,ry=h*0.34;nd.x=w/2+Math.cos(a)*rx;nd.y=h/2+Math.sin(a)*ry;});}
+  function resize(){dpr=Math.min(devicePixelRatio||1,2);c.width=c.clientWidth*dpr;c.height=c.clientHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);layout();}
+  function nodeColor(nd,recovered){if(recovered||!nd.broken)return[196,168,130];return[224,101,79];}
+  function tick(ts){
+    if(!vis){raf=requestAnimationFrame(tick);return;}
+    if(!started)started=ts; t=(ts-started)/1000;
+    const heal=reduce?1:clamp((t-0.3)/3.2,0,1); // red→gold sweep over time
+    ctx.clearRect(0,0,w,h);
+    // edges
+    EDGES.forEach((e)=>{const a=NODES[e[0]],b=NODES[e[1]];ctx.strokeStyle='rgba(120,120,130,.16)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();});
+    // pulses (signal flow)
+    if(!reduce)pulses.forEach(pu=>{pu.p+=pu.sp;if(pu.p>1)pu.p=0;const a=NODES[pu.e[0]],b=NODES[pu.e[1]];const x=a.x+(b.x-a.x)*pu.p,y=a.y+(b.y-a.y)*pu.p;ctx.fillStyle='rgba(77,166,255,'+(0.5*Math.sin(pu.p*Math.PI))+')';ctx.beginPath();ctx.arc(x,y,2,0,7);ctx.fill();});
+    // nodes
+    NODES.forEach((nd,i)=>{
+      const recovered=nd.broken? (i%3!==0? heal>0.5: heal>0.85) : true; // most heal, a couple late
+      const col=nodeColor(nd,recovered&&nd.broken? (heal>0.5):false);
+      const isBrokenNow=nd.broken && heal< (i%3===0?0.85:0.5);
+      const rgb=isBrokenNow?[224,101,79]:[196,168,130];
+      const hl=hover===i;
+      const pr=hl?9:7;
+      // glow
+      const g=ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,28);
+      g.addColorStop(0,'rgba('+rgb.join(',')+','+(hl?.5:.32)+')');g.addColorStop(1,'rgba('+rgb.join(',')+',0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(nd.x,nd.y,28,0,7);ctx.fill();
+      ctx.fillStyle='rgba('+rgb.join(',')+',1)';ctx.beginPath();ctx.arc(nd.x,nd.y,pr,0,7);ctx.fill();
+      ctx.fillStyle='#0a0a0c';ctx.beginPath();ctx.arc(nd.x,nd.y,pr-2.5,0,7);ctx.fill();
+      // label
+      ctx.fillStyle=hl?'#ECEAE3':'rgba(180,180,190,.8)';ctx.font='600 11px Sora,sans-serif';ctx.textAlign='center';
+      const below=nd.y>h/2; ctx.fillText(nd.n,nd.x,nd.y+(below?22:-16));
+    });
+    raf=requestAnimationFrame(tick);
+  }
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();const mx=e.clientX-r.left,my=e.clientY-r.top;hover=-1;NODES.forEach((nd,i)=>{if(Math.hypot(nd.x-mx,nd.y-my)<18)hover=i;});c.style.cursor=hover>=0?'pointer':'default';});
+  c.addEventListener('pointerleave',()=>hover=-1);
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis&&!started)started=0;}).observe(c);
+  addEventListener('resize',resize);resize();requestAnimationFrame(tick);
+})();
+
+/* ════ SIGNATURE #3 · Industry Intelligence Engine ════ */
+(function(){
+  const DATA={
+    restaurant:{em:'🍽️',name:'Restaurant',pri:'Local demand',desc:'Restaurants win on visibility, speed, and getting people back through the door. The engine weights local discovery, online-ordering friction, and repeat-customer systems far above generic SEO.',
+      metrics:[['Local visibility & reviews','crit',92,false],['Online ordering speed','crit',86,false],['Repeat-customer follow-up','high',74,true],['Social / ad content','high',68,true],['Website conversion','base',52,false],['Generic SEO score','base',34,true]],
+      note:'A slow ordering flow and weak review velocity cost a restaurant more than any keyword ranking ever will.'},
+    dentist:{em:'🦷',name:'Dentist',pri:'Trust & calls',desc:'For a dental practice, trust and answered calls are the revenue engine. The model elevates reviews, website credibility, and appointment capture — and flags every missed call as lost lifetime value.',
+      metrics:[['Reviews & reputation','crit',94,false],['Missed-call capture','crit',88,false],['Website trust signals','high',76,true],['Local SEO','high',70,true],['Appointment flow','base',58,false],['Follow-up & reminders','base',50,true]],
+      note:'One missed call for a dentist can be thousands in lifetime value — so call capture is treated as a top-tier leak.'},
+    contractor:{em:'🛠️',name:'Contractor',pri:'Lead capture',desc:'Contractors lose money in the gap between interest and quote. The model weights quote-request capture, answered calls, project proof, and Google presence over almost everything else.',
+      metrics:[['Quote-form & lead capture','crit',93,false],['Missed-call recovery','crit',87,true],['Reviews & project photos','high',75,false],['Google Business presence','high',71,true],['Follow-up speed','base',56,true],['Website polish','base',44,false]],
+      note:'A contractor who answers fast and shows real project photos wins jobs a prettier site would have lost.'},
+    auto:{em:'🚗',name:'Auto Shop',pri:'Repeat service',desc:'Auto shops run on trust, local search, and bringing cars back for service. The engine prioritizes review signals, service reminders, and answered calls — the things that refill the bays.',
+      metrics:[['Reviews & trust signals','crit',91,false],['Service reminders','crit',83,true],['Local search presence','high',77,false],['Call answer rate','high',69,true],['Repeat-service follow-up','base',58,true],['Website conversion','base',46,false]],
+      note:'Service reminders and strong reviews refill bays on their own — that recurring revenue is where the leak usually hides.'},
+    barber:{em:'💈',name:'Barber & Salon',pri:'Booking & loyalty',desc:'Barbers and salons live on booking convenience, reminders, and loyalty. The engine prioritizes friction-free booking, no-show reduction, and the social proof that fills the chair.',
+      metrics:[['Online booking ease','crit',90,false],['Reminders & no-show rate','crit',84,true],['Social proof & reviews','high',78,false],['Local reputation','high',66,true],['Repeat-client loyalty','base',60,true],['Website depth','base',40,false]],
+      note:'Every no-show is an empty chair. Reminder automation and easy rebooking move the needle more than a redesign.'},
+    attorney:{em:'⚖️',name:'Attorney',pri:'Trust & intake',desc:'Law firms are bought on credibility and speed of intake. The engine weights reputation, trust signals, and how fast an inquiry becomes a consultation — small leaks here are very expensive cases lost.',
+      metrics:[['Reputation & reviews','crit',95,false],['Intake & response speed','crit',89,true],['Website trust & authority','high',80,false],['Local & practice-area SEO','high',72,true],['Consultation follow-up','base',60,true],['Content depth','base',48,false]],
+      note:'In legal, one lost intake can be a five-figure case. Speed-to-response and reputation outweigh almost everything else.'}
+  };
+  const tabs=document.getElementById('engTabs'), panel=document.getElementById('engPanel');
+  let timer=null, order=Object.keys(DATA), idx=0, autop=true;
+  function render(key){
+    const d=DATA[key];
+    const m=d.metrics.map(([n,w,v,s])=>{const wl=w==='crit'?'Critical':w==='high'?'High':'Baseline';return `<div class="metric ${s?'s':''}"><div class="top"><span class="mname">${n}</span><span class="w ${w}">${wl}</span></div><div class="track"><span class="bar" data-w="${v}"></span></div></div>`;}).join('');
+    panel.innerHTML=`<div class="eng-fade"><div class="eng-top"><div class="eng-head"><span class="big">${d.em}</span><h3>${d.name}</h3></div><span class="eng-pri">Priority · ${d.pri}</span></div><p class="desc">${d.desc}</p><div class="eng-metrics">${m}</div><p class="eng-note">${d.note}</p></div>`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{panel.querySelectorAll('.bar').forEach(b=>b.style.width=b.dataset.w+'%');}));
+  }
+  function setActive(key,user){
+    tabs.querySelectorAll('.eng-tab').forEach(x=>x.classList.toggle('active',x.dataset.ind===key));
+    idx=order.indexOf(key); render(key);
+    if(user){autop=false; if(timer){clearInterval(timer);timer=null;} tabs.querySelectorAll('.prog').forEach(p=>p.style.display='none');}
+  }
+  tabs.addEventListener('click',e=>{const t=e.target.closest('.eng-tab');if(!t)return;setActive(t.dataset.ind,true);});
+  // autorotate only while in view
+  new IntersectionObserver(es=>{
+    if(es[0].isIntersecting&&autop&&!reduce&&!timer){
+      timer=setInterval(()=>{idx=(idx+1)%order.length;setActive(order[idx],false);},7000);
+    }else if(!es[0].isIntersecting&&timer){clearInterval(timer);timer=null;}
+  },{threshold:.3}).observe(panel);
+  render('restaurant');
+})();
+
+/* ════ SIGNATURE #4 · Opportunity Engine ════ */
+(function(){
+  const CASES=[
+    {name:'Local Restaurant · 2 locations',num:12400,score:78,leaks:9,top:'High',recs:['<b>Missed-call text-back</b> → recover walk-ins','<b>Review velocity</b> → +0.4★ in 60 days','<b>Online ordering</b> friction removed']},
+    {name:'Dental Practice · single office',num:8700,score:71,leaks:7,top:'High',recs:['<b>Call capture</b> on every missed ring','<b>Reputation engine</b> for new reviews','<b>Intake follow-up</b> within the hour']},
+    {name:'Contractor · regional',num:31000,score:84,leaks:11,top:'Very High',recs:['<b>Quote-form recovery</b> for lost leads','<b>Project-photo proof</b> on key pages','<b>Speed-to-lead</b> automation']}
+  ];
+  const nameEl=document.getElementById('oppName'),numEl=document.getElementById('oppNum'),scoreEl=document.getElementById('oppScore'),leaksEl=document.getElementById('oppLeaks'),topEl=document.getElementById('oppTop'),recsEl=document.getElementById('oppRecs'),dotsEl=document.getElementById('oppDots'),stage=document.getElementById('oppStage');
+  let cur=-1,playing=false,cycle=null;
+  CASES.forEach((_,i)=>{const b=document.createElement('button');b.addEventListener('click',()=>{stop();show(i);});dotsEl.appendChild(b);});
+  function animateNum(to,dur){const start=performance.now();(function s(now){const p=clamp((now-start)/dur,0,1);const e=1-Math.pow(1-p,3);numEl.textContent=fmtMoney(to*e);if(p<1)requestAnimationFrame(s);})(start);}
+  function animateInt(el,to,dur){const start=performance.now();(function s(now){const p=clamp((now-start)/dur,0,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s);})(start);}
+  function show(i){
+    cur=i;const cs=CASES[i];
+    nameEl.textContent=cs.name; topEl.textContent=cs.top;
+    [...dotsEl.children].forEach((d,k)=>d.classList.toggle('on',k===i));
+    if(reduce){numEl.textContent=fmtMoney(cs.num);scoreEl.textContent=cs.score;leaksEl.textContent=cs.leaks;}
+    else{animateNum(cs.num,1500);animateInt(scoreEl,cs.score,1400);animateInt(leaksEl,cs.leaks,1200);}
+    recsEl.innerHTML=cs.recs.map(r=>`<div class="opp-rec">${r}</div>`).join('');
+    const recs=[...recsEl.children];
+    recs.forEach((r,k)=>setTimeout(()=>r.classList.add('show'),reduce?0:600+k*180));
+  }
+  function start(){if(playing)return;playing=true;show(0);cycle=setInterval(()=>{show((cur+1)%CASES.length);},6500);}
+  function stop(){if(cycle){clearInterval(cycle);cycle=null;}}
+  new IntersectionObserver(es=>{if(es[0].isIntersecting){start();}},{threshold:.4}).observe(stage);
+})();
+
+/* ════ SECTION 5 · The Work We Build ════ */
+(function(){
+  const grid=document.getElementById('workGrid'); if(!grid) return;
+  const I={
+    bi:'<path d="M3 17V11M9 17V5M15 17V9M21 17V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+    audit:'<rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    web:'<rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M3 8h18M6 21h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    auto:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    crm:'<circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>',
+    ai:'<rect x="5" y="7" width="14" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M12 4v3M9 13h.01M15 13h.01M9 16h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+    lead:'<path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.3"/>',
+    follow:'<path d="M4 5h16v11H7l-3 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/><path d="M8 10h8M8 13h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    dash:'<rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="3" width="8" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="10" width="8" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>',
+    report:'<path d="M6 3h9l5 5v13H6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/><path d="M15 3v5h5M9 14l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>'
+  };
+  const WORK=[
+    ['Business Intelligence','bi','A live diagnosis of where revenue leaks and what to fix first.'],
+    ['Audit Software','audit','The scoring engine that powers every diagnosis, by industry.'],
+    ['Custom Websites','web','Fast, credible sites built to convert — not just to look good.'],
+    ['Automation Systems','auto','Missed-call text-back, follow-up, and reminders that run themselves.'],
+    ['CRM Infrastructure','crm','One source of truth for every lead and customer you touch.'],
+    ['AI Agents','ai','Assistants that qualify, route, and follow up around the clock.'],
+    ['Lead Capture Systems','lead','Forms and funnels engineered so no inquiry is ever lost.'],
+    ['Customer Follow-Up','follow','Sequences that turn interest into booked, paid revenue.'],
+    ['Operational Dashboards','dash','The health of your business on a single, honest screen.'],
+    ['Reporting Systems','report','Clear, recurring intelligence instead of monthly guesswork.']
+  ];
+  grid.innerHTML=WORK.map(([t,ic,d],i)=>`<div class="work-card"><span class="tagn">${String(i+1).padStart(2,'0')}</span><span class="wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none">${I[ic]}</svg></span><h4>${t}</h4><p>${d}</p></div>`).join('');
+})();
+
+/* ════ Leak scanner rows (disabled V8 — replaced by Implementation Engine) ════ */
+(function(){
+  return;
+  const LEAKS=[
+    ['Missed calls','Calls ringing out with no callback','Automation · missed-call text-back','hi'],
+    ['Weak Google profile','Incomplete listing, thin local presence','Reviews · visibility','hi'],
+    ['No SMS follow-up','Leads going cold within the first hour','Automation','hi'],
+    ['Broken lead capture','Forms that lose or never route the lead','Website','hi'],
+    ['Poor review velocity','Too few recent reviews to build trust','Reviews','md'],
+    ['Slow website','Mobile load shedding visitors before they act','Website','md'],
+    ['No retargeting','Paid traffic that bounces and never returns','Ads','md'],
+    ['Low trust signals','No proof, guarantees, or credibility above the fold','Website','md'],
+    ['Weak offer clarity','Visitors can\'t tell what you do in five seconds','Offer','md'],
+    ['No CRM','Customer data scattered, follow-up impossible to scale','Systems · follow-up','lo'],
+    ['No reminder system','Repeat &amp; recurring revenue left on the table','Follow-up','lo']
+  ];
+  const ICON={hi:'<svg width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#E0654F" stroke-width="1.1" fill="none"/><path d="M8 5v4M8 11v.5" stroke="#E0654F" stroke-width="1.3"/></svg>',md:'<svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 2l6 11H2z" stroke="#E0A04E" stroke-width="1.1" fill="none"/><path d="M8 7v3M8 11.5v.4" stroke="#E0A04E" stroke-width="1.2"/></svg>',lo:'<svg width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#5FBF8F" stroke-width="1.1" fill="none"/><path d="M5.5 8l1.7 1.7L10.5 6.4" stroke="#5FBF8F" stroke-width="1.2" fill="none"/></svg>'};
+  const LABEL={hi:'High Impact',md:'Med Impact',lo:'Low Impact'};
+  const body=document.getElementById('scanBody');
+  body.insertAdjacentHTML('beforeend',LEAKS.map(([n,d,fix,imp])=>`<div class="leak-row"><div class="lname"><span class="ic">${ICON[imp]}</span><div class="lt"><b>${n}</b><span>${d}</span></div></div><span></span><div class="meta-fix"><small>Fix</small>${fix}</div><span class="impact-pill ${imp}">${LABEL[imp]}</span></div>`).join(''));
+})();
+
+/* ════ SIGNATURE · The Business Operating System ════ */
+(function(){
+  const track=document.getElementById('osTrack'); if(!track) return;
+  const I={
+    audit:'<circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M14.5 14.5L20 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+    plan:'<path d="M4 6h16M4 11h11M4 16h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+    auto:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M18.4 5.6l-2 2M7.6 16.4l-2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    infra:'<ellipse cx="12" cy="6" rx="7" ry="3" stroke="currentColor" stroke-width="1.3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" stroke="currentColor" stroke-width="1.3" fill="none"/>',
+    web:'<rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M3 9h18" stroke="currentColor" stroke-width="1.3"/>',
+    content:'<path d="M4 9v6l9 4V5L4 9z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/><path d="M16.5 9a4 4 0 010 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>',
+    monitor:'<rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 11l2-2 2 3 2-4 2 3" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 20h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
+  };
+  const STAGES=[
+    ['Audit','Business Intelligence Audit','We scan your website, visibility, reviews, follow-up and trust — and score every leak by money impact.','Opportunity score','audit'],
+    ['Recovery Plan','Revenue Recovery Plan','Findings ranked into a sequenced plan: what to fix first, what each fix is worth, and which wins come quickest.','Ranked roadmap','plan'],
+    ['Automation','Automation Systems','Missed-call text-back, instant lead follow-up, review requests and reminders — deployed and running.','Follow-up automation','auto'],
+    ['Infrastructure','CRM &amp; Lead Capture','CRM and lead capture wired together so no inquiry is ever lost, dropped, or forgotten again.','CRM + capture','infra'],
+    ['Website','Conversion-Built Website','A fast, credible site engineered to convert the traffic and attention you already have.','Custom website','web'],
+    ['Content Engine','Visibility &amp; Authority','Content and reputation produced on a schedule — so the market keeps seeing you and trust compounds.','Content &amp; reach','content'],
+    ['Intelligence Monitoring','Ongoing Intelligence','Live dashboards watch the business, track recovery, and catch new leaks before they cost you.','Live monitoring','monitor']
+  ];
+  track.innerHTML=STAGES.map(([k,t,p,inst,ic],i)=>`<div class="os-stage" data-i="${i}"><div class="os-dot"><div class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none">${I[ic]}</svg></div></div><div class="os-card"><div class="oc-main"><div class="oc-k">Layer 0${i+1} · ${k}</div><h3>${t}</h3><p>${p}</p></div><div class="os-install"><b>Installs</b>${inst}</div></div></div>`).join('');
+  const stages=[...track.querySelectorAll('.os-stage')];
+  const fill=document.getElementById('osFill');
+  let maxLit=-1;
+  if(reduce){stages.forEach(s=>s.classList.add('lit'));if(fill)fill.style.height='100%';return;}
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ const i=+e.target.dataset.i; e.target.classList.add('lit'); if(i>maxLit){maxLit=i; if(fill)fill.style.height=(((maxLit+1)/stages.length)*100)+'%';} } });
+  },{threshold:.45, rootMargin:'0px 0px -12% 0px'});
+  stages.forEach(s=>io.observe(s));
+})();
+
+/* ════ SECTION · The Implementation Engine ════ */
+(function(){
+  const grid=document.getElementById('implGrid'); if(!grid) return;
+  const I={
+    call:'<path d="M5 4h3l1.2 4-2 1.2c.7 1.8 2 3.1 3.8 3.8L12.2 14l4 1.2v3a1 1 0 01-1.1 1A13 13 0 014 5.1 1 1 0 015 4z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/>',
+    review:'<path d="M12 3l2.4 5 5.4.5-4 3.6 1.2 5.3L12 15.2 6.9 17.4 8 12.1l-4-3.6 5.4-.5z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>',
+    follow:'<path d="M4 5h16v11H7l-3 3z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/>',
+    conv:'<path d="M3 4h18l-7 8v6l-4 2v-8z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/>',
+    content:'<path d="M4 9v6l9 4V5L4 9z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/><path d="M16.5 9a4 4 0 010 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>',
+    report:'<rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="3" width="8" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="10" width="8" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>',
+    auto:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2M6 6l1.5 1.5M16.5 16.5L18 18M18 6l-1.5 1.5M7.5 16.5L6 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+    crm:'<circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>',
+    web:'<rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M3 9h18" stroke="currentColor" stroke-width="1.3"/>',
+    dash:'<rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="3" width="8" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="13" y="10" width="8" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>'
+  };
+  const ARROW='<svg width="22" height="14" viewBox="0 0 22 14" fill="none"><path d="M0 7h18M14 2l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>';
+  const ROWS=[
+    ['Missed calls','call','Text-Back Automation','auto'],
+    ['Weak reviews','review','Review Engine','review'],
+    ['Poor follow-up','follow','CRM + Nurture System','crm'],
+    ['Low conversion','conv','Website Optimization','web'],
+    ['No content','content','Content Engine','content'],
+    ['No reporting','report','Business Dashboard','dash']
+  ];
+  grid.innerHTML=ROWS.map(([p,pi,s,si])=>`<div class="impl-row"><div class="impl-prob"><span class="impl-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">${I[pi]}</svg></span><div class="impl-t"><span>Problem</span><b>${p}</b></div></div><div class="impl-arrow">${ARROW}</div><div class="impl-sol"><span class="impl-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none">${I[si]}</svg></span><div class="impl-t"><span>We build</span><b>${s}</b></div></div></div>`).join('');
+})();
 </script>
 </body>
 </html>
